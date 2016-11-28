@@ -1,0 +1,7 @@
+pic:
+    resource: "@PicBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
