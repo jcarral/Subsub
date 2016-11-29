@@ -1,0 +1,51 @@
+PicBundle\Entity\Rating:
+    type: entity
+    table: ratings
+    indexes:
+        fk_ratings_post:
+            columns:
+                - post_id
+        fk_ratings_user:
+            columns:
+                - user_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        points:
+            type: integer
+            nullable: true
+            options:
+                unsigned: false
+        inserteddate:
+            type: date
+            nullable: true
+            column: insertedDate
+    manyToOne:
+        post:
+            targetEntity: Post
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: postRatings
+            joinColumns:
+                post_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        user:
+            targetEntity: User
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: userRatings
+            joinColumns:
+                user_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,75 @@
+PicBundle\Entity\User:
+    type: entity
+    table: users
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 120
+            options:
+                fixed: false
+        mail:
+            type: string
+            nullable: false
+            length: 120
+            options:
+                fixed: false
+        pass:
+            type: string
+            nullable: false
+            length: 120
+            options:
+                fixed: false
+        avatar:
+            type: string
+            nullable: true
+            length: 255
+            options:
+                fixed: false
+        role:
+            type: string
+            nullable: true
+            length: 120
+            options:
+                fixed: false
+        status:
+            type: string
+            nullable: true
+            length: 120
+            options:
+                fixed: false
+    oneToMany:
+      userPost:
+        targetEntity: Post
+        mappedBy: author
+        cascade: ["persist"]
+      userComment:
+        targetEntity: Comment
+        mappedBy: user
+        cascade: ["persist"]
+      userFavs:
+        targetEntity: Fav
+        mappedBy: user
+        cascade: ["persist"]
+      userRatings:
+        targetEntity: Rating
+        mappedBy: user
+        cascade: ["persist"]
+      userFollowers:
+        targetEntity: Follower
+        mappedBy: follower
+        cascade: ["persist"]
+      userStalker:
+        targetEntity: Follower
+        mappedBy: user
+        cascade: ["persist"]
+    lifecycleCallbacks: {  }

@@ -1,0 +1,41 @@
+PicBundle\Entity\PostTag:
+    type: entity
+    table: posts_tags
+    indexes:
+        fk_posttags_post:
+            columns:
+                - post_id
+        fk_posttags_tag:
+            columns:
+                - tag_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    manyToOne:
+        post:
+            targetEntity: Post
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: postTags
+            joinColumns:
+                post_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tag:
+            targetEntity: Tag
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: tagPosts
+            joinColumns:
+                tag_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
