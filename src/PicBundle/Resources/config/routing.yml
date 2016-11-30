@@ -1,3 +1,13 @@
+login:
+  path: /login
+  defaults: { _controller: PicBundle:User:login }
+
+login_check:
+  path: /login_check
+
+logout:
+  path: /logout
+
 pic_homepage:
     path:     /
     defaults: { _controller: PicBundle:Default:index }

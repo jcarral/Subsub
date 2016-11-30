@@ -3,11 +3,11 @@
 namespace PicBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User.
  */
-class User
+class User implements UserInterface
 {
     private $id;
     private $name;
@@ -150,5 +150,28 @@ class User
     public function getUserPost()
     {
         return $this->userPost;
+    }
+
+
+    // Interface methods
+    public function getUsername(){
+      return $this->mail;
+    }
+
+    public function getSalt(){
+      return null;
+    }
+
+    public function getRoles() {
+  		return array($this->getRole());
+  	}
+
+    public function eraseCredentials(){
+
+    }
+
+    public function getPassword()
+    {
+        return $this->getPass();
     }
 }

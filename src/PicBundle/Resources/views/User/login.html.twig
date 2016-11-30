@@ -1,0 +1,25 @@
+{% extends "PicBundle::layout.html.twig" %}
+{% block content %}
+
+    {% if app.user != null %}
+        {{ dump(app.user.role) }}
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+      <a href="...">Delete</a>
+  {% endif %}
+    <form class="" action="{{path("login_check")}}" method="post">
+        <input type="text" id="username" name="_username" value="{{last_username}}">
+        <input type="password" name="_password" value="" placeholder="Contraseña">
+        <input type="submit" name="" value="Login">
+        <input type="hidden" name="_target_path" value="/login">
+    </form>
+
+    <div class="registro">
+      {% for message in app.session.flashbag.get("status") %}
+
+      <div class="alert">{{message}}</div>
+      {% endfor %}
+      {{form_start(form)}}
+      {{form_end(form)}}
+    </div>
+{% endblock %}
