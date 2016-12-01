@@ -1,0 +1,11 @@
+{% if app.user == null %}
+<a href="{{path("login")}}"class="btn btn-login">
+  Iniciar sesión | Registro
+  <i class="fa fa-user"></i>
+</a>
+{% else %}
+<a href="{{path("logout")}}"class="btn btn-logout">
+  Cerrar sesión
+  <i class="fa fa-sign-out"></i>
+</a>
+{% endif %}

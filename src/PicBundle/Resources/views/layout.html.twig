@@ -1,25 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>{% block  title %} SubSub {% endblock %} </title>
-</head>
-<body>
-  <header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>
+            {% block title %}
+                SubSub
+            {% endblock %}
+        </title>
+        <link href="{{ asset('bundles/css/main.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('bundles/fontAwesome/css/font-awesome.min.css') }}">
+    </head>
+    <body>
+        <header class="header">
+            <div class="header-container">
+                <div class="header-title">
+                    <a href="/">
+                        <h1 class="header-title-main">SUBSUB</h1>
+                        <h6 class="header-subtitle">Subtitulo impactante aquí</h6>
+                    </a>
+                </div>
 
-  </header>
-  <main>
-    {% block content %}
-      SubSub
-    {% endblock %}
-  </main>
-  <footer class="footer">
-    <a href="http://www.github.com/jcarral/subsub">
-      <img src="{{asset('images/logo_symfony.png')}}" alt="">
-    </a>
-  </footer>
+                {% include "PicBundle::loginbtns.html.twig" %}
+            </div>
+        </header>
+        <main class="container">
+            {% block content %}
+                SubSub
+            {% endblock %}
+        </main>
+        <footer class="footer">
+            <a href="abjlab.github.io">
+                <img src="{{asset('bundles/images/logo_white.png')}}" alt="" width="120px" height="120px">
+            </a>
+            <div class="footer-divider"></div>
+            <a href="http://www.github.com/jcarral/subsub">
+                <img src="{{asset('bundles/images/github-10-xxl.png')}}" alt="" width="120px" height="120px">
+            </a>
+        </footer>
 
-</body>
+    </body>
 </html>
