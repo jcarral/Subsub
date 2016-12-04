@@ -1,0 +1,51 @@
+{% extends "PicBundle::layout.html.twig" %}
+{% block content %}
+  <div class="upload-title">
+    <h2>Subir una imagen nueva</h2>
+    <p>Añade una nueva foto a tu albúm!</p>
+  </div>
+  <div class="new_post">
+    {{form_start(form, { attr: {novalidate: 'novalidate'} })}}
+    <div class="upload-file">
+      <label for="post_image" class="upload-file-wrapper">
+        <h3>Elige una imagen</h3>
+        <img src="" alt="" width="300px" height="300px" style="margin: 0 auto" class="hidden" id="previewImage">
+        <div class="upload-file-wrapper--dashed" id="uploadWrapper">
+          <i class="fa fa-plus"></i>
+        </div>
+      </label>
+      <div class="upload-file-pane">
+        <label class="btn-file" for="post_image">
+          Subir desde galeria
+          {{form_widget(form.image)}}
+          <i class="fa fa-file-image-o"></i>
+        </label>
+        <div class="btn-file" id="btnPhoto">
+          Tomar una foto
+          <i class="fa fa-camera-retro"></i>
+        </div>
+      </div>
+    </div>
+      <div class="form-row">
+        <div class="form-column">
+          <label for="post_title">Título </label>
+          {{form_widget(form.title)}}
+        </div>
+        <div class="form-colum">
+          <label for="post_status">Privacidad </label>
+          {{form_widget(form.status)}}
+        </div>
+      </div>
+      <div class="form-column">
+        <label for="post_description">Descripción </label>
+        {{form_widget(form.description)}}
+      </div>
+
+      {{form_widget(form.Subir)}}
+    {{form_end(form)}}
+  </div>
+
+  <canvas id="canvas" width="600" height="480" class="hidden"></canvas>
+    <!--
+    <script type="text/javascript" src="{{ asset('bundles/script/camera.js') }}"></script> -->
+{% endblock %}

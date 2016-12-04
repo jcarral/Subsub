@@ -25,20 +25,20 @@
                 {% include "PicBundle::loginbtns.html.twig" %}
             </div>
         </header>
-        <main class="container">
+            <main class="container" style="margin-top: 56px">
             {% block content %}
                 SubSub
             {% endblock %}
-        </main>
-        <footer class="footer">
-            <a href="abjlab.github.io">
-                <img src="{{asset('bundles/images/logo_white.png')}}" alt="" width="120px" height="120px">
-            </a>
-            <div class="footer-divider"></div>
-            <a href="http://www.github.com/jcarral/subsub">
-                <img src="{{asset('bundles/images/github-10-xxl.png')}}" alt="" width="120px" height="120px">
-            </a>
-        </footer>
-
-    </body>
-</html>
+            </main>
+            <footer class="footer">
+                <a href="http://abjlab.github.io">
+                    <img src="{{asset('bundles/images/logo_white.png')}}" alt="" width="120px" height="120px">
+                </a>
+                <div class="footer-divider"></div>
+                <a href="http://www.github.com/jcarral/subsub">
+                    <img src="{{asset('bundles/images/github-10-xxl.png')}}" alt="" width="120px" height="120px">
+                </a>
+            </footer>
+          <script type="text/javascript" src="{{ asset('bundles/script/bundle.js') }}"></script>
+        </body>
+    </html>

@@ -1,13 +1,16 @@
 .btn{
-  padding: 10px 20px;
+  padding: 5px;
   transition: .3s ease all;
   cursor: pointer;
 }
 
 .btn-login{
   background-color: $loginColor;
-  font-size: 1.25em;
+  font-size: 1em;
   color: $fontLightColor;
+  height: 100%;
+  padding: 0 10px;
+  line-height: 52.25px;
   &:hover{
     background-color: darken($loginColor, 10%);
   }
@@ -20,14 +23,22 @@
 
 .btn-logout{
   background-color: $logoutColor;
-  font-size: 1.25em;
+  font-size: 1em;
   color: $fontLightColor;
-  &:hover{
-    background-color: darken($logoutColor, 10%);
+  height: 100%;
+}
+
+.btn-logged{
+  height: 100%;
+  transition: all 0.2s ease;
+  line-height: 52.25px;
+  padding: 0 10px;
+  font-weight: bold;
+  color: $darkColor;
+  i{
+    margin: 0 3px;
   }
-  >i{
-    color: darken($logoutColor, 20%);
-    font-weight: bold;
-    margin-left: 8px;
+  &:hover{
+    background-color: darken(white, 10%);
   }
 }

@@ -1,11 +1,29 @@
-{% if app.user == null %}
-<a href="{{path("login")}}"class="btn btn-login">
-  Iniciar sesión | Registro
-  <i class="fa fa-user"></i>
-</a>
-{% else %}
-<a href="{{path("logout")}}"class="btn btn-logout">
-  Cerrar sesión
-  <i class="fa fa-sign-out"></i>
-</a>
-{% endif %}
+<div class="header-botones">
+    <div class="btn btn-search">
+        <i class="fa fa-search"></i>
+    </div>
+    {% if app.user == null %}
+        <a href="{{path('login')}}" class="btn btn-login">
+            Iniciar sesión
+            <i class="fa fa-user"></i>
+        </a>
+    {% else %}
+        <a href="{{path('post_add')}}" class="btn btn-logged">
+            <i class="fa fa-upload"></i>
+            Subir imagen
+        </a>
+        <a href="{{path('post_add')}}" class="btn btn-logged">
+            <i class="fa fa-heart"></i>
+            Mis favoritos
+        </a>
+        <a href="{{path('post_add')}}" class="btn btn-logged">
+            <i class="fa fa-user"></i>
+            Mi perfil
+        </a>
+
+        <a href="{{path('logout')}}" class="btn btn-logged btn-logout">
+            Cerrar sesión
+            <i class="fa fa-sign-out"></i>
+        </a>
+    {% endif %}
+</div>

@@ -1,0 +1,9 @@
+{% extends "PicBundle::layout.html.twig" %}
+{% block content %}
+{% for message in app.session.flashbag.get("status") %}
+<div class="alert">{{message}}</div>
+{% endfor %}
+{{form_start(form)}}
+{{form_end(form)}}
+
+{% endblock %}

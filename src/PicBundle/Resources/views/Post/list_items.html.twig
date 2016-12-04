@@ -1,0 +1,20 @@
+{% extends "PicBundle::layout.html.twig" %}
+{% block content %}
+
+    <ul class="post-list">
+        {% for post in posts %}
+            <li class="post-list--item">
+                <a href="#" class="card">
+                    <div class="card-image">
+                        <img src="{{ asset("uploads/"~post.image)}}" alt="">
+                    </div>
+                    <div class="card-content">
+                        <i class="fa fa-heart-o"></i>
+                        <p class="card-content--title">{{post.title}}</p>
+                        <p class="card-content--author">{{post.author.name}}</p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

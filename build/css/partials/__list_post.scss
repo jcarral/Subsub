@@ -1,0 +1,56 @@
+.post-list{
+  max-width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 1em;
+  box-sizing: border-box;
+  height: 70vh;
+  overflow: hidden;
+  padding: 0 2em;
+}
+
+.post-list--item{
+  width: 250px;
+  margin: 16px;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-image{
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  &>img{
+    max-width: 250px;
+    top: 0;
+    left: 0;
+  }
+
+  &>i{
+    background-color: #c30aa5;
+    border-radius: 100%;
+    padding: 16px;
+    width: 10px;
+    height: 10px;
+    z-index: 12;
+
+  }
+}
+.card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content--title {
+    color: #673AB7;
+    font-size: 25px;
+}
+
+.card-content--author {
+    color: #673AB7;
+    font-size: 15px;
+}

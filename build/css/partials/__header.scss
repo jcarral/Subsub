@@ -1,13 +1,11 @@
 .header{
   width: 100%;
-  height: 84px;
-  background-color: $darkColor;
-  position: fixed;
+  height: 56px;
+  background-color: white;
+  border-top: 4px solid $mainColor;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
+  position: fixed;
+  z-index: 999;
 
   &-container{
     height: 100%;
@@ -18,7 +16,7 @@
     align-items: center;
   }
   &-title{
-    color: $titleColor;
+    color: $mainColor;
     font-family: 'Molot';
     font-weight: bold;
   }
@@ -36,19 +34,27 @@
 }
 
 .header-title-main{
-  color: $titleColor;
+  color: $mainColor;
   transition: .4s ease all;
   &:hover{
-    color: darken($titleColor, 10%);
+    color: darken($mainColor, 10%);
   }
 }
 
 .header-subtitle{
   color: $lightColor;
-  font-size: 1em;
+  margin-top: -5px;
+  padding-top: 0px;
+  font-size: .75em;
   transition: .4s ease all;
   font-family: 'Lato';
   &:hover{
     color: darken(#cfcfcf, 10%);
   }
+}
+
+.header-botones{
+  display: flex;
+  height: 100%;
+  align-items: center;
 }
