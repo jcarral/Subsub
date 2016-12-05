@@ -1,6 +1,6 @@
 .upload-title {
     width: 100%;
-    height: 20vh;
+    height: 150px;
     background-color: #FAFAFA;
     border-bottom: 1px solid #DBDBDB;
 
@@ -96,7 +96,7 @@
     line-height: 30px;
     font-size: 1em;
     border: 0;
-    border-bottom: 2px solid $darkColor;
+    border-bottom: 2px solid $blueLightColor;
 }
 
 .form-submit {
@@ -152,18 +152,6 @@
     }
 }
 
-.modal-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    width: 100%;
-    height: 100%;
-    z-index: 33333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .camera-frame {
     position: absolute;
@@ -221,7 +209,6 @@
             -webkit-box-shadow: none;
             box-shadow: none;
             &:last-of-type {
-                border-radius: 0 4px 4px 0;
                 background-color: $logoutColor;
             }
         }
@@ -242,11 +229,11 @@
         transition: all 0.1s ease-in-out;
 
         &:first-of-type {
-            border-radius: 4px 0 0 4px;
+            //border-radius: 4px 0 0 4px;
         }
 
         &:last-of-type {
-            border-radius: 0 4px 4px 0;
+            //border-radius: 0 4px 4px 0;
         }
 
         &:hover {

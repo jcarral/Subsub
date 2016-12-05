@@ -1,0 +1,97 @@
+.modal{
+  &-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      height: 100%;
+      z-index: 33333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  &-frame{
+    position: absolute;
+    background-color: #FFFFFF;
+
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+
+    & > span {
+        cursor: pointer;
+        font-size: 1.2em;
+    }
+
+    i{
+      margin-right: 10px;
+      font-size: 1.15em;
+      font-weight: bold;
+    }
+  }
+
+  &-error{
+    background-color: $logoutColor;
+    i{
+      color: darken($logoutColor, 10%);
+    }
+  }
+
+  &-success{
+    background-color: $loginColor;
+    i{
+      color: darken($loginColor, 10%);
+    }
+  }
+
+  &-warning{
+    background-color: $titleColor;
+    i{
+      color: darken($titleColor, 10%);
+    }
+  }
+
+  &-btn{
+    width: 50%;
+    margin: auto;
+    padding: 10px 20px;
+    border: none;
+    margin: 10px 0;
+    transition: all 0.25 ease-in;
+    font-weight: bold;
+    &:hover.modal-error{
+      background-color: darken($logoutColor, 10%);
+    }
+
+    &:hover.modal-success{
+      background-color: darken($loginColor, 10%);
+    }
+
+    &:hover.modal-warning{
+      background-color: darken($titleColor, 10%);
+    }
+
+    &:hover{
+      color: #FAFAFA;
+    }
+  }
+
+  &-mssg{
+    padding: 30px 15px;
+    font-size: 1.25em;
+    font-family: 'Roboto';
+    width: 100%;
+
+  }
+}

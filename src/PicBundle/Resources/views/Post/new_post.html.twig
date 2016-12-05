@@ -10,6 +10,7 @@
       <label for="post_image" class="upload-file-wrapper">
         <h3>Elige una imagen</h3>
         <img src="" alt="" width="300px" height="300px" style="margin: 0 auto" class="hidden" id="previewImage">
+        <canvas width="300px" height="300px" style="margin: 0 auto" class="hidden" id="previewCanvas"></canvas>
         <div class="upload-file-wrapper--dashed" id="uploadWrapper">
           <i class="fa fa-plus"></i>
         </div>
@@ -45,7 +46,7 @@
     {{form_end(form)}}
   </div>
 
-  <canvas id="canvas" width="600" height="480" class="hidden"></canvas>
+
     <!--
     <script type="text/javascript" src="{{ asset('bundles/script/camera.js') }}"></script> -->
 {% endblock %}

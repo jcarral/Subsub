@@ -19,3 +19,13 @@ pic_tags:
 post_add:
   path: /add
   defaults: { _controller: PicBundle:Post:add }
+
+post_ajax:
+  path: /add/ajax
+  defaults: { _controller: PicBundle:Post:addAjax }
+
+post_detail:
+  path: /post/{postId}
+  defaults: { _controller: PicBundle:Post:detail }
+  requirements:
+        page: '\d+'
