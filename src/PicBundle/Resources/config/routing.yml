@@ -35,3 +35,11 @@ post_detail:
 post_tag:
   path: /add/tag
   defaults: { _controller: PicBundle:Post:addTag }
+
+post_rating:
+  path: /add/rating
+  defaults: { _controller: PicBundle:Rating:add }
+
+rating_count:
+  path: /rating/count/{id}
+  defaults: { _controller: PicBundle:Rating:count }

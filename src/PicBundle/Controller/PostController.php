@@ -129,7 +129,9 @@ class PostController extends Controller
       $postTag = htmlspecialchars($request->request->get('tag'));
       if($this->validTag($postTag, $postId)) $mssg = $post_repo->addTagToPost($postId, $postTag);
       else $mssg = "ERROR#1";
-      return new JsonResponse(array('message' => $mssg));
+
+      if(is_array($mssg)) return new JsonResponse(array('message' => $mssg[0], 'id' => $mssg[1]));
+      else return new JsonResponse(array('message' => $mssg));
 
     }
 

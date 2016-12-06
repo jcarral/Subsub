@@ -32,7 +32,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
       $postTag->setTag($tag_obj);
       $em->persist($postTag);
       $flush = $em->flush();
-      return 'OK#0';
+      return array('OK#0', $postTag->getId());
     }else{
       return 'ERROR#0';
     }
@@ -51,7 +51,23 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
       array_push($list, array('name' => $pt->getTag()->getName(), 'id' => $pt->getId()));
     }
     return $list;
+  }
 
+  public function getPostRatingMedia($post){
+    $em=$this->getEntityManager();
+    $rating_repo = $em->getRepository('PicBundle:Rating');
+
+    $ratings = $rating_repo->findBy(array('post'=>$post));
+    $count = 0;
+    $rating_total = 0;
+    foreach ($ratings as $rating) {
+      $rating_total += $rating->getPoints();
+      $count++;
+    }
+    if($count > 0)
+      return ($rating_total/$count);
+    else
+      return 0;
   }
 }
 

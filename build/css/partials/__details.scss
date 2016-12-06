@@ -10,13 +10,20 @@
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    max-height: 400px;
+    min-height: 400px;
     overflow: hidden;
+
+    h5{
+      font-size: 1em;
+      i{
+        margin-right: 10px;
+      }
+    }
   }
 
   &-photo{
     width: 600px;
-    height: auto;
+  max-height: 400px;
 
   }
 
@@ -34,6 +41,7 @@
     &--header{
       border-bottom: 2px solid #DBDBDB;
       padding: 5px 0;
+      font-weight: bold;
       i{
         margin-right: 1em;
       }
@@ -45,13 +53,13 @@
 
     &--rating{
       width: 90%;
-      background-color: $darkColor;
+      background-color: #FAFAFA;
       height: 50px;
       margin: 10px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
     }
   }
@@ -115,6 +123,11 @@
 	  border-style:solid;
   	border-width:6px 0 6px 6px;
   }
+
+  &-remove{
+    cursor: pointer;
+    color: #a8a8a8;
+  }
 }
 
 .tag-input{
@@ -130,7 +143,7 @@
   cursor: pointer;
   i{
     font-size: 1.25em;
-      color: $titleColor;
+      color: #009688;
 
   }
 }

@@ -42,3 +42,19 @@
     background-color: darken(white, 10%);
   }
 }
+
+.btn-follow{
+  background-color: $blueDarkColor;
+  padding: 5px;
+  transition: all 0.3s ease-in;
+  color: #FAFAFA;
+  font-size: 0.7em;
+  &:hover{
+    background-color: darken($blueDarkColor, 10%);
+    color: lighten(#FAFAFA, 10%);
+  }
+  i{
+    margin-right: 10px;
+    color: #FAFAFA;
+  }
+}

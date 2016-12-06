@@ -33,11 +33,18 @@ li{
 .row{
   display: flex;
   flex-flow: row wrap;
+  &.center-v{
+    align-items: center;
+  }
+  &.end-h{
+    justify-content: flex-end;
+  }
+  &.space-bet-h{
+    justify-content: space-between;
+  }
 }
 
-.row-align-center{
-  align-items: center;
-}
+
 
 .row-justify-center{
   justify-content: center;

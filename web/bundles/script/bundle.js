@@ -12,8 +12,12 @@ var _modals = require('./lib/modals.js');
 
 var tagInput = document.getElementById('tagInput');
 var idHiddenInput = document.getElementById('hiddenId');
+var user = document.getElementById('hiddenUser');
+
 var tagList = document.getElementById('tagList');
 var removableTags = document.getElementsByClassName('tag-remove');
+var stars = document.getElementsByClassName('rating-star');
+var radioStars = document.getElementsByClassName('radio-star');
 
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
@@ -42,12 +46,13 @@ var removeParent = function removeParent() {
     removeTagFromDb(this.parentElement);
 };
 
-var addTagToList = function addTagToList(tag) {
-    var div = document.createElement('div');
-    div.classList = 'tag';
-    div.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
-    tagList.appendChild(div);
-    div.addEventListener('click', removeTag);
+var addTagToList = function addTagToList(tag, id) {
+    var li = document.createElement('li');
+    li.classList = 'tag';
+    li.setAttribute('data-tag', id);
+    li.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
+    tagList.appendChild(li);
+    li.addEventListener('click', removeTag);
 };
 
 var addTagHandler = function addTagHandler(e) {
@@ -65,7 +70,7 @@ var addTagHandler = function addTagHandler(e) {
                 console.log(data);
                 data = JSON.parse(data);
                 if (data.message === 'OK#0') {
-                    addTagToList(currentTag);
+                    addTagToList(currentTag, data.id);
                 } else if (data.message === 'ERROR#0') {
                     (0, _modals.warningModal)('El tag que intentas meter ya existe');
                 } else {
@@ -75,12 +80,58 @@ var addTagHandler = function addTagHandler(e) {
         })();
     }
 };
+
+var updateRating = function updateRating(data) {
+    data = JSON.parse(data);
+    var rating = Math.round(parseInt(data.count));
+
+    var _loop = function _loop(i) {
+        setTimeout(function () {
+            stars[i].children[0].classList = 'fa fa-star';
+        }, 50 + i * 50);
+    };
+
+    for (var i = 0; i < rating; i++) {
+        _loop(i);
+    }
+};
+
+var ratingCount = function ratingCount() {
+    var config = {
+        method: 'POST',
+        url: '/rating/count/' + idHiddenInput.value
+    };
+    for (var i = 0; i < 5; i++) {
+        stars[i].children[0].classList = 'fa fa-star-o';
+    }(0, _utils.ajax)(config).then(function (data) {
+        return updateRating(data);
+    });
+};
+
+var ratePost = function ratePost(e) {
+    var rateValue = e.target.id.charAt(e.target.id.length - 1);
+    rateValue = parseInt(rateValue);
+    if (user === null || typeof user === 'undefined') return (0, _modals.warningModal)('Debes estar logeado para valorar una foto');
+    var config = {
+        method: 'POST',
+        url: '/add/rating',
+        body: 'userId=' + user.value + '&postId=' + idHiddenInput.value + '&val=' + rateValue
+    };
+    (0, _utils.ajax)(config).then(function (data) {
+        data = JSON.parse(data);
+        if (data.message === 'OK#0') ratingCount();else (0, _modals.errorModal)('Un error muy raro, es tu culpa');
+    });
+};
 var setDetail = exports.setDetail = function setDetail() {
     if (tagInput === null) return false;
     tagInput.addEventListener('keypress', addTagHandler);
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
     }
+    for (var _i = 0; _i < radioStars.length; _i++) {
+        radioStars[_i].addEventListener('click', ratePost);
+    }
+    ratingCount();
 };
 
 },{"./lib/modals.js":2,"./lib/utils.js":3}],2:[function(require,module,exports){
