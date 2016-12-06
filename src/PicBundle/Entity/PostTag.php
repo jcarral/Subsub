@@ -8,7 +8,13 @@ namespace PicBundle\Entity;
 class PostTag
 {
     private $id;
+    /**
+     * @var \PicBundle\Entity\Post
+     */
     private $post;
+    /**
+     * @var \PicBundle\Entity\Tag
+     */
     private $tag;
 
     public function getId()

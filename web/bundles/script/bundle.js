@@ -2,6 +2,69 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setDetail = undefined;
+
+var _utils = require('./lib/utils.js');
+
+var _modals = require('./lib/modals.js');
+
+var tagInput = document.getElementById('tagInput');
+var idHiddenInput = document.getElementById('hiddenId');
+var tagList = document.getElementById('tagList');
+
+Element.prototype.remove = function () {
+  this.parentElement.removeChild(this);
+};
+
+var removeTag = function removeTag() {
+  this.remove();
+  //TODO: Eliminar de la DB la etiqueta
+};
+
+var addTagToList = function addTagToList(tag) {
+  var div = document.createElement('div');
+  div.classList = 'tag';
+  div.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
+  tagList.appendChild(div);
+  div.addEventListener('click', removeTag);
+};
+
+var addTagHandler = function addTagHandler(e) {
+
+  if (e.keyCode === 32) {
+    (function () {
+      var currentTag = tagInput.value;
+      var config = {
+        url: '/add/tag',
+        method: 'POST',
+        body: 'id=' + idHiddenInput.value + '&tag=' + currentTag
+      };
+      tagInput.value = '';
+      (0, _utils.ajax)(config).then(function (data) {
+        console.log(data);
+        data = JSON.parse(data);
+        if (data.message === 'OK#0') {
+          addTagToList(currentTag);
+        } else if (data.message === 'ERROR#0') {
+          (0, _modals.warningModal)('El tag que intentas meter ya existe');
+        } else {
+          (0, _modals.errorModal)('Los datos de la etiqueta no son correctos');
+        }
+      });
+    })();
+  }
+};
+var setDetail = exports.setDetail = function setDetail() {
+  if (tagInput === null) return false;
+  tagInput.addEventListener('keypress', addTagHandler);
+};
+
+},{"./lib/modals.js":2,"./lib/utils.js":3}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 Element.prototype.remove = function () {
@@ -49,7 +112,7 @@ var warningModal = exports.warningModal = function warningModal(message) {
     return createModal(message, 'warning');
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -71,7 +134,7 @@ var ajax = exports.ajax = function ajax(config) {
     });
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -98,14 +161,17 @@ var validarFormAjax = exports.validarFormAjax = function validarFormAjax(titulo,
   return validarStatus(status) && validarTitulo(titulo) && validarCanvas(canvas);
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var _upload = require('./upload.js');
 
+var _detail = require('./detail.js');
+
+(0, _detail.setDetail)();
 (0, _upload.setUpload)();
 
-},{"./upload.js":5}],5:[function(require,module,exports){
+},{"./detail.js":1,"./upload.js":6}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -113,9 +179,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.setUpload = undefined;
 
-var _validaciones = require('./lib/validaciones.js');
-
 var _modals = require('./lib/modals.js');
+
+var _validaciones = require('./lib/validaciones.js');
 
 var _utils = require('./lib/utils.js');
 
@@ -128,7 +194,6 @@ var uploadFile = document.getElementById("post_image");
 var uploadWrapper = document.getElementById('uploadWrapper');
 var btnSubmit = document.getElementById('post_Subir');
 var canvas = document.getElementById('previewCanvas');
-var context = canvas.getContext('2d');
 var titleInput = document.getElementById('post_title');
 var descriptionInput = document.getElementById('post_description');
 var statusInput = {
@@ -262,9 +327,10 @@ var submitHandler = function submitHandler(e) {
 
 var setUpload = exports.setUpload = function setUpload() {
     if (btnPhoto === null || uploadFile === null) return false;
+    var context = canvas.getContext('2d');
     btnPhoto.addEventListener('click', takePhoto);
     uploadFile.addEventListener('change', previewImage);
     btnSubmit.addEventListener('click', submitHandler);
 };
 
-},{"./lib/modals.js":1,"./lib/utils.js":2,"./lib/validaciones.js":3}]},{},[4]);
+},{"./lib/modals.js":2,"./lib/utils.js":3,"./lib/validaciones.js":4}]},{},[5]);

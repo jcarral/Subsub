@@ -1,6 +1,7 @@
 PicBundle\Entity\Post:
     type: entity
     table: posts
+    repositoryClass: PicBundle\Repository\PostRepository
     indexes:
         fk_post_users:
             columns:

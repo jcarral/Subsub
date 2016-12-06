@@ -1,7 +1,4 @@
 import {
-    validarForm
-} from './lib/validaciones.js'
-import {
     errorModal,
     successModal
 } from './lib/modals.js'
@@ -31,7 +28,6 @@ const uploadFile = document.getElementById("post_image")
 const uploadWrapper = document.getElementById('uploadWrapper')
 const btnSubmit = document.getElementById('post_Subir')
 const canvas = document.getElementById('previewCanvas')
-const context = canvas.getContext('2d')
 const titleInput = document.getElementById('post_title')
 const descriptionInput = document.getElementById('post_description')
 const statusInput = {
@@ -164,6 +160,7 @@ const submitHandler = (e) => {
 
 export const setUpload = () => {
     if (btnPhoto === null || uploadFile === null) return false
+    const context = canvas.getContext('2d')
     btnPhoto.addEventListener('click', takePhoto)
     uploadFile.addEventListener('change', previewImage)
     btnSubmit.addEventListener('click', submitHandler)

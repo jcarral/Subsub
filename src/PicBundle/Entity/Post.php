@@ -20,6 +20,9 @@ class Post
     private $type;
     private $author;
     protected $postRatings;
+    /**
+   * @var \PicBundle\Entity\PostTag
+   */
     protected $postTags;
     protected $postComments;
     protected $postFavs;
@@ -51,6 +54,12 @@ class Post
     {
         return $this->postTags;
     }
+
+    public function addPostTag(\PicBundle\Entity\Tag $tag){
+		$this->postTags[] = $tag;
+
+		return $this;
+	}
 
     public function getId()
     {

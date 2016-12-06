@@ -87,7 +87,7 @@ class PostController extends Controller
             $post->setStatus($status);
             $date = new \DateTime("now");
             $post->setInserteddate($date);
-            
+
             $image = base64_decode($image);
             $path = __DIR__.'/../../../web/uploads/';
             $image_name = time().'.png';
@@ -109,11 +109,32 @@ class PostController extends Controller
 
     public function detailAction(Request $request, $postId)
     {
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+
+        $post = $post_repo->findOneBy(array('id' => $postId));
+        $listTags = $post_repo->getAllPostTags($post);
         return $this->render('PicBundle:Post:detail.html.twig',
           array(
-            'postId' => $postId,
+            'post' => $post,
+            'tags' => $listTags
           )
         );
+    }
+
+    public function addTagAction(Request $request){
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+      $postId = $request->request->get('id');
+      $postTag = htmlspecialchars($request->request->get('tag'));
+      if($this->validTag($postTag, $postId)) $mssg = $post_repo->addTagToPost($postId, $postTag);
+      else $mssg = "ERROR#1";
+      return new JsonResponse(array('message' => $mssg));
+
+    }
+
+    private function validTag($tag, $postId){
+      return is_numeric($postId) && strlen(trim($tag, ' ')) > 0;
     }
 
     private function validAjaxForm($title, $status, $image)

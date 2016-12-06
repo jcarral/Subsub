@@ -4,7 +4,7 @@
     <ul class="post-list">
         {% for post in posts %}
             <li class="post-list--item">
-                <a href="#" class="card">
+                <a href="/post/{{post.id}}" class="card">
                     <div class="card-image">
                         <img src="{{ asset("uploads/"~post.image)}}" alt="">
                     </div>
