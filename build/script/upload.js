@@ -35,6 +35,7 @@ const statusInput = {
     privado: document.getElementById('post_status_1')
 }
 
+let context
 let localstream
 let tmpFile
 let btnSnap
@@ -160,7 +161,7 @@ const submitHandler = (e) => {
 
 export const setUpload = () => {
     if (btnPhoto === null || uploadFile === null) return false
-    const context = canvas.getContext('2d')
+    context = canvas.getContext('2d')
     btnPhoto.addEventListener('click', takePhoto)
     uploadFile.addEventListener('change', previewImage)
     btnSubmit.addEventListener('click', submitHandler)

@@ -2,7 +2,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.setDetail = undefined;
 
@@ -13,52 +13,74 @@ var _modals = require('./lib/modals.js');
 var tagInput = document.getElementById('tagInput');
 var idHiddenInput = document.getElementById('hiddenId');
 var tagList = document.getElementById('tagList');
+var removableTags = document.getElementsByClassName('tag-remove');
 
 Element.prototype.remove = function () {
-  this.parentElement.removeChild(this);
+    this.parentElement.removeChild(this);
+};
+
+var removeTagFromDb = function removeTagFromDb(element) {
+    var config = {
+        method: 'POST',
+        url: '/tag/delete/' + element.getAttribute('data-tag')
+    };
+
+    (0, _utils.ajax)(config).then(function (data) {
+        console.log(data);
+    });
 };
 
 var removeTag = function removeTag() {
-  this.remove();
-  //TODO: Eliminar de la DB la etiqueta
+    this.remove();
+    'debugger';
+    removeTagFromDb(this);
+};
+
+var removeParent = function removeParent() {
+    this.parentElement.remove();
+    'debugger';
+    removeTagFromDb(this.parentElement);
 };
 
 var addTagToList = function addTagToList(tag) {
-  var div = document.createElement('div');
-  div.classList = 'tag';
-  div.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
-  tagList.appendChild(div);
-  div.addEventListener('click', removeTag);
+    var div = document.createElement('div');
+    div.classList = 'tag';
+    div.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
+    tagList.appendChild(div);
+    div.addEventListener('click', removeTag);
 };
 
 var addTagHandler = function addTagHandler(e) {
 
-  if (e.keyCode === 32) {
-    (function () {
-      var currentTag = tagInput.value;
-      var config = {
-        url: '/add/tag',
-        method: 'POST',
-        body: 'id=' + idHiddenInput.value + '&tag=' + currentTag
-      };
-      tagInput.value = '';
-      (0, _utils.ajax)(config).then(function (data) {
-        console.log(data);
-        data = JSON.parse(data);
-        if (data.message === 'OK#0') {
-          addTagToList(currentTag);
-        } else if (data.message === 'ERROR#0') {
-          (0, _modals.warningModal)('El tag que intentas meter ya existe');
-        } else {
-          (0, _modals.errorModal)('Los datos de la etiqueta no son correctos');
-        }
-      });
-    })();
-  }
+    if (e.keyCode === 32 || e.keyCode === 13) {
+        (function () {
+            var currentTag = tagInput.value;
+            var config = {
+                url: '/add/tag',
+                method: 'POST',
+                body: 'id=' + idHiddenInput.value + '&tag=' + currentTag
+            };
+            tagInput.value = '';
+            (0, _utils.ajax)(config).then(function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+                if (data.message === 'OK#0') {
+                    addTagToList(currentTag);
+                } else if (data.message === 'ERROR#0') {
+                    (0, _modals.warningModal)('El tag que intentas meter ya existe');
+                } else {
+                    (0, _modals.errorModal)('Los datos de la etiqueta no son correctos');
+                }
+            });
+        })();
+    }
 };
 var setDetail = exports.setDetail = function setDetail() {
-  if (tagInput === null) return false;
-  tagInput.addEventListener('keypress', addTagHandler);
+    if (tagInput === null) return false;
+    tagInput.addEventListener('keypress', addTagHandler);
+    for (var i = removableTags.length - 1; i >= 0; i--) {
+        removableTags[i].addEventListener('click', removeParent);
+    }
 };
 
 },{"./lib/modals.js":2,"./lib/utils.js":3}],2:[function(require,module,exports){
@@ -201,6 +223,7 @@ var statusInput = {
     privado: document.getElementById('post_status_1')
 };
 
+var context = void 0;
 var localstream = void 0;
 var tmpFile = void 0;
 var btnSnap = void 0;
@@ -327,7 +350,7 @@ var submitHandler = function submitHandler(e) {
 
 var setUpload = exports.setUpload = function setUpload() {
     if (btnPhoto === null || uploadFile === null) return false;
-    var context = canvas.getContext('2d');
+    context = canvas.getContext('2d');
     btnPhoto.addEventListener('click', takePhoto);
     uploadFile.addEventListener('change', previewImage);
     btnSubmit.addEventListener('click', submitHandler);

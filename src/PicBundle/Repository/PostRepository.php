@@ -48,7 +48,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     $post_tags = $posttag_repo->findBy(array('post' => $post));
     $list = array();
     foreach ($post_tags as $pt) {
-      array_push($list, $pt->getTag()->getName());
+      array_push($list, array('name' => $pt->getTag()->getName(), 'id' => $pt->getId()));
     }
     return $list;
 

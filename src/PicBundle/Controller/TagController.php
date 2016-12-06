@@ -4,6 +4,7 @@ namespace PicBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use PicBundle\Entity\Tag;
 use PicBundle\Form\TagType;
@@ -48,5 +49,15 @@ class TagController extends Controller
         return $this->render('PicBundle:Tag:add.html.twig', array(
         'form' => $form->createView(),
       ));
+    }
+
+    public function deleteAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager();
+      $repo = $em->getRepository('PicBundle:PostTag');
+      $posttag = $repo->find($id);
+      $em->remove($posttag);
+      $em->flush();
+      return new JsonResponse(array('message' => 'OK#0'));
     }
 }

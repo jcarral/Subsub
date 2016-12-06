@@ -23,7 +23,7 @@
   &-info{
     padding: 10px 30px;
     height: 100%;
-    min-width: 280px;
+    width: 280px;
     border: 1px solid #DBDBDB;
     border-top: 0;
     border-left: 0;
@@ -41,6 +41,18 @@
 
     &--item{
       padding: 5px 0;
+    }
+
+    &--rating{
+      width: 90%;
+      background-color: $darkColor;
+      height: 50px;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+
     }
   }
 
@@ -77,5 +89,48 @@
         resize: none;
       }
     }
+  }
+}
+
+.detail-info--tags{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.tag{
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #DBDBDB;
+  margin: 5px 3px;
+  border-left: 4px solid $mainColor;
+  border-radius: 0 4px 4px 0;
+  position: relative;
+  &:before{
+    content: '';
+    position:absolute;
+	  top:35%;
+    left: -2px;
+    border-color: transparent transparent transparent $mainColor;
+	  border-style:solid;
+  	border-width:6px 0 6px 6px;
+  }
+}
+
+.tag-input{
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $mainColor;
+  padding: 5px;
+}
+
+.rating-star{
+  display: inline-block;
+  margin: 0 5px;
+  cursor: pointer;
+  i{
+    font-size: 1.25em;
+      color: $titleColor;
+
   }
 }

@@ -16,12 +16,33 @@
                 Detalles
             </header>
             <div class="detail-info--item">
+
+                <div class="row row-align-center">
                 <i class="fa fa-user"></i>
                 {{post.author.name}}
+                <div class="btn btn-follow">Seguir</div>
+                </div>
+
             </div>
             <div class="detail-info--item">
                 <i class="fa fa-calendar"></i>
                 {{post.insertedDate|date("m/d/Y")}}
+            </div>
+            <div class="detail-info--item">
+                <i class="fa fa-star-o"></i>
+                Valoración
+                <div class="detail-info--rating">
+                    <input type="radio" name="star1" id="star1" value="" class="hidden">
+                    <input type="radio" name="star2" id="star2" value="" class="hidden">
+                    <input type="radio" name="star3" id="star3" value="" class="hidden">
+                    <input type="radio" name="star4" id="star4" value="" class="hidden">
+                    <input type="radio" name="star5" id="star5" value="" class="hidden">
+                    <label for="star1" class="rating-star"><i class="fa fa-star"></i></label>
+                    <label for="star1" class="rating-star"><i class="fa fa-star"></i></label>
+                    <label for="star1" class="rating-star"><i class="fa fa-star"></i></label>
+                    <label for="star1" class="rating-star"><i class="fa fa-star"></i></label>
+                    <label for="star1" class="rating-star"><i class="fa fa-star"></i></label>
+                </div>
             </div>
 
             <div class="detail-divider"></div>
@@ -30,13 +51,13 @@
               Etiquetas</h5>
             <ul class="detail-info--tags" id="tagList">
               {% if app.user != null and app.user.id == post.author.id %}
-                <form class="" action="index.html" method="post">
-                  <input type="text" name="" value="" id="tagInput">
+
+                  <input type="text" name="" value="" id="tagInput" class="tag-input" placeholder="Añadir un nuevo tag">
                   <input type="hidden" value={{post.id}} id="hiddenId">
-                </form>
+
                 {% endif %}
                 {% for tag in tags %}
-                  <li class="tag"><a href="">{{tag}}</a>
+                  <li class="tag" data-tag="{{tag.id}}"><a href="">{{tag.name}}</a>
                   {% if app.user != null and app.user.id == post.author.id %}
                     <span class="tag-remove">&times;</span>
                   {% endif %}
