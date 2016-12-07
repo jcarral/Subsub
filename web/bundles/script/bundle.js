@@ -115,7 +115,7 @@ var ratePost = function ratePost(e) {
     var config = {
         method: 'POST',
         url: '/add/rating',
-        body: 'userId=' + user.value + '&postId=' + idHiddenInput.value + '&val=' + rateValue
+        body: 'postId=' + idHiddenInput.value + '&val=' + rateValue
     };
     (0, _utils.ajax)(config).then(function (data) {
         data = JSON.parse(data);

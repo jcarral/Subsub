@@ -17,7 +17,6 @@ class RatingController extends Controller
     $em = $this->getDoctrine()->getManager();
     $post_repo = $em->getRepository('PicBundle:Post');
     $this_repo = $em->getRepository('PicBundle:Rating');
-    //$userId = htmlspecialchars($request->request->get('title'));
     $postId = htmlspecialchars($request->request->get('postId'));
     $val = htmlspecialchars($request->request->get('val'));
     $user = $this->getUser();

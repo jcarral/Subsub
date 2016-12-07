@@ -106,7 +106,7 @@ const ratePost = (e) => {
     let config = {
         method: 'POST',
         url: '/add/rating',
-        body: `userId=${user.value}&postId=${idHiddenInput.value}&val=${rateValue}`
+        body: `postId=${idHiddenInput.value}&val=${rateValue}`
     }
     ajax(config)
         .then((data) => {

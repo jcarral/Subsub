@@ -19,52 +19,55 @@ class UserController extends Controller
 
     public function loginAction(Request $request)
     {
-        $authUtils = $this->get('security.authentication_utils');
-        $error = $authUtils->getLastAuthenticationError();
-        $lastUser = $authUtils->getLastUsername();
+      $authenticationUtils = $this->get("security.authentication_utils");
+      $error = $authenticationUtils->getLastAuthenticationError();
+      $lastUsername = $authenticationUtils->getLastUsername();
 
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+      $user = new User();
+      $form = $this->createForm(UserType::class,$user);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $user_repo = $em->getRepository('PicBundle:User');
-                $user = $user_repo->findOneBy(array('mail' => $form->get('mail')->getData()));
-                if (count($user) == 0) {
-                    $factory = $this->get('security.encoder_factory');
-                    $encoder = $factory->getEncoder($user);
-                    $password = $encoder->encodePassword($form->get('pass')->getData(), $user->getSalt());
-                    $user->setName($form->get('name')->getData());
-                    $user->setMail($form->get('mail')->getData());
-                    $user->setPass($password);
-                    $user->setRole('ROLE_USER');
-                    $user->setStatus('public');
+      $form->handleRequest($request);
+      if($form->isSubmitted()){
+        if($form->isValid()){
+          $em=$this->getDoctrine()->getEntityManager();
+          $user_repo=$em->getRepository("PicBundle:User");
+          $user = $user_repo->findOneBy(array("email"=>$form->get("email")->getData()));
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($user);
-                    $flush = $em->flush();
-                    if ($flush == null) {
-                        $status = 'Te has registrado correctamente';
-                    } else {
-                        $status = 'No te has podido registrar, comprueba que has introducido bien todos los campos';
-                    }
-                } else {
-                    $status = 'El usuario que intentas meter ya existe';
-                }
-            } else {
-                $status = 'No te has podido registrar, comprueba que has introducido bien todos los campos';
+          if(count($user)==0){
+            $user = new User();
+            $user->setName($form->get("name")->getData());
+            $user->setStatus('public');
+            $user->setMail($form->get("mail")->getData());
+
+            $factory = $this->get("security.encoder_factory");
+            $encoder = $factory->getEncoder($user);
+            $password = $encoder->encodePassword($form->get("pass")->getData(), $user->getSalt());
+
+            $user->setPassword($password);
+            $user->setRole("ROLE_USER");
+            $user->setImagen(null);
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($user);
+            $flush = $em->flush();
+            if($flush==null){
+              $status = "El usuario se ha creado correctamente";
+            }else{
+              $status = "No te has registrado correctamente";
             }
-            $this->session->getFlashBag()->add('status', $status);
+          }else{
+            $status = "El usuario ya existe!!!";
+          }
+        }else{
+          $status = "No te has registrado correctamente";
         }
 
-        return $this->render('PicBundle:User:login.html.twig',
-          array(
-            'error' => $error,
-            'last_username' => $lastUser,
-            'form' => $form->createView(),
-          )
-      );
+        $this->session->getFlashBag()->add("status",$status);
+      }
+      return $this->render("PicBundle:User:login.html.twig", array(
+        "error" => $error,
+        "last_username" => $lastUsername,
+        "form" => $form->createView()
+      ));
     }
 }
