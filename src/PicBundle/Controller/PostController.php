@@ -114,10 +114,12 @@ class PostController extends Controller
 
         $post = $post_repo->findOneBy(array('id' => $postId));
         $listTags = $post_repo->getAllPostTags($post);
+        $comments = $post->getPostComments();
         return $this->render('PicBundle:Post:detail.html.twig',
           array(
             'post' => $post,
-            'tags' => $listTags
+            'tags' => $listTags,
+            'comments' => $comments
           )
         );
     }

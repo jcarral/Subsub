@@ -69,6 +69,10 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     else
       return 0;
   }
+
+  public function getAllPostComments($post){
+    
+  }
 }
 
  ?>

@@ -5,6 +5,8 @@ import {
     warningModal,
     errorModal
 } from './lib/modals.js'
+import {validarComentario} from './lib/validaciones.js'
+
 const tagInput = document.getElementById('tagInput')
 const idHiddenInput = document.getElementById('hiddenId')
 const user = document.getElementById('hiddenUser')
@@ -13,12 +15,19 @@ const tagList = document.getElementById('tagList')
 const removableTags = document.getElementsByClassName('tag-remove')
 const stars = document.getElementsByClassName('rating-star')
 const radioStars = document.getElementsByClassName('radio-star')
+const commentTitle = document.getElementById('commentTitle')
+const commentContent = document.getElementById('commentContent')
+const commentSubmit = document.getElementById('commentSubmit')
+const commentList = document.getElementById('commentList')
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
 }
 
-
+String.prototype.replaceAll = function(search, replacement) {
+    let target = this
+    return target.split(search).join(replacement)
+}
 const removeTagFromDb = function(element) {
     let config = {
         method: 'POST',
@@ -115,10 +124,52 @@ const ratePost = (e) => {
             else errorModal('Un error muy raro, es tu culpa')
         })
 }
+
+const addCommentToList = (title, content, date, author) => {
+  let comment = document.createElement('li')
+  date = date.date.split(' ')[0].replaceAll('-', '/')
+  let body = `
+  <img src="/bundles/images/default_user.png" height="64px" width="64px" />
+  <div class="column comment-info">
+    <div class="comment-info-header row">
+      <a href="/user/${author.id}">${author.name}</a>
+      <h5 class="comment-title">${title.value}</h5>
+    </div>
+    <p>${content.value}</p>
+    <p class="comment-date">${date}</p>
+  </div>
+  `
+  comment.classList = 'comment row'
+  comment.innerHTML = body
+  commentList.appendChild(comment)
+}
+
+const commentPost = (e) => {
+  e.preventDefault()
+  let title = commentTitle
+  let content = commentContent
+
+  if(!validarComentario(title, content)) return errorModal('El comentario debe de tener un titulo y un contenido')
+  let config = {
+    url: '/add/comment',
+    method: 'POST',
+    body: `postId=${idHiddenInput.value}&title=${title.value}&content=${content.value}`
+  }
+  ajax(config)
+    .then((data)=>{
+      data = JSON.parse(data)
+      console.log(data);
+      if(data.message === 'OK#0') addCommentToList(title, content, data.date, data.author)
+      else errorModal('No se ha podido añadir el comentario')
+    })
+}
+
 export const setDetail = () => {
     if(idHiddenInput === null) return false
-    if (tagInput !== null)
-      tagInput.addEventListener('keypress', addTagHandler)
+
+    if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler)
+    if(commentSubmit !== null) commentSubmit.addEventListener('click', commentPost)
+
     for (let i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent)
     }

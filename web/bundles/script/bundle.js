@@ -10,6 +10,8 @@ var _utils = require('./lib/utils.js');
 
 var _modals = require('./lib/modals.js');
 
+var _validaciones = require('./lib/validaciones.js');
+
 var tagInput = document.getElementById('tagInput');
 var idHiddenInput = document.getElementById('hiddenId');
 var user = document.getElementById('hiddenUser');
@@ -18,11 +20,19 @@ var tagList = document.getElementById('tagList');
 var removableTags = document.getElementsByClassName('tag-remove');
 var stars = document.getElementsByClassName('rating-star');
 var radioStars = document.getElementsByClassName('radio-star');
+var commentTitle = document.getElementById('commentTitle');
+var commentContent = document.getElementById('commentContent');
+var commentSubmit = document.getElementById('commentSubmit');
+var commentList = document.getElementById('commentList');
 
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
 };
 
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
 var removeTagFromDb = function removeTagFromDb(element) {
     var config = {
         method: 'POST',
@@ -122,9 +132,40 @@ var ratePost = function ratePost(e) {
         if (data.message === 'OK#0') ratingCount();else (0, _modals.errorModal)('Un error muy raro, es tu culpa');
     });
 };
+
+var addCommentToList = function addCommentToList(title, content, date, author) {
+    var comment = document.createElement('li');
+    date = date.date.split(' ')[0].replaceAll('-', '/');
+    var body = '\n  <img src="/bundles/images/default_user.png" height="64px" width="64px" />\n  <div class="column comment-info">\n    <div class="comment-info-header row">\n      <a href="/user/' + author.id + '">' + author.name + '</a>\n      <h5 class="comment-title">' + title.value + '</h5>\n    </div>\n    <p>' + content.value + '</p>\n    <p class="comment-date">' + date + '</p>\n  </div>\n  ';
+    comment.classList = 'comment row';
+    comment.innerHTML = body;
+    commentList.appendChild(comment);
+};
+
+var commentPost = function commentPost(e) {
+    e.preventDefault();
+    var title = commentTitle;
+    var content = commentContent;
+
+    if (!(0, _validaciones.validarComentario)(title, content)) return (0, _modals.errorModal)('El comentario debe de tener un titulo y un contenido');
+    var config = {
+        url: '/add/comment',
+        method: 'POST',
+        body: 'postId=' + idHiddenInput.value + '&title=' + title.value + '&content=' + content.value
+    };
+    (0, _utils.ajax)(config).then(function (data) {
+        data = JSON.parse(data);
+        console.log(data);
+        if (data.message === 'OK#0') addCommentToList(title, content, data.date, data.author);else (0, _modals.errorModal)('No se ha podido añadir el comentario');
+    });
+};
+
 var setDetail = exports.setDetail = function setDetail() {
     if (idHiddenInput === null) return false;
+
     if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler);
+    if (commentSubmit !== null) commentSubmit.addEventListener('click', commentPost);
+
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
     }
@@ -135,7 +176,7 @@ var setDetail = exports.setDetail = function setDetail() {
     ratingCount();
 };
 
-},{"./lib/modals.js":2,"./lib/utils.js":3}],2:[function(require,module,exports){
+},{"./lib/modals.js":2,"./lib/utils.js":3,"./lib/validaciones.js":4}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -233,6 +274,9 @@ var validarFormPost = exports.validarFormPost = function validarFormPost(titulo,
 };
 var validarFormAjax = exports.validarFormAjax = function validarFormAjax(titulo, canvas, status) {
   return validarStatus(status) && validarTitulo(titulo) && validarCanvas(canvas);
+};
+var validarComentario = exports.validarComentario = function validarComentario(titulo, contenido) {
+  return validarTitulo(titulo) && validarTitulo(contenido);
 };
 
 },{}],5:[function(require,module,exports){

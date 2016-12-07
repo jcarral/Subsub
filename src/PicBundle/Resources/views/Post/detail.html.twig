@@ -87,15 +87,38 @@
     <section class="detail-comments">
         <header class="detail-comments--header">
             <h5>
-                <i class="fa fa-comments"></i>Comentarios</h5>
-            <span>#XX</span>
+                <i class="fa fa-commenting-o"></i>Nuevo comentario</h5>
+
         </header>
         {% if app.user != null %}
-            <form action="" class="detail-comments-new">
-                <textarea name="comment" id="commentContent" cols="30" rows="10"></textarea>
-                <input type="submit" name="" value="Añadir comentario">
+            <form action="" class="detail-comments-new column">
+                <p>Añadir nuevo comentario</p>
+                <input type="text" name="title" value="" placeholder="Introduce el asunto del comentario" id="commentTitle" class="comment-input">
+                <textarea name="comment" id="commentContent" cols="30" rows="10" placeholder="Introduce el contenido del comentario"></textarea>
+                <input type="submit" name="" value="Añadir comentario" id="commentSubmit" class="comment-submit">
             </form>
         {% endif %}
+        <header class="detail-comments--header">
+            <h5>
+                <i class="fa fa-comments-o"></i>Comentarios antiguos</h5>
+                <span>#{{comments|length}}</span>
+        </header>
+        <ul class="comments-list" id="commentList">
+        {% for com in comments %}
+          <li class="comment row">
+            <img src="{{asset('bundles/images/default_user.png')}}" height="64px" width="64px" />
+            <div class="column comment-info">
+              <div class="comment-info-header row">
+                <a href="#">{{com.user.name}}</a>
+                <h5 class="comment-title">{{com.title}}</h5>
+              </div>
+              <p>{{com.content}}</p>
+              <p class="comment-date">{{com.insertedDate|date("m/d/Y")}}</p>
+            </div>
+
+          </li>
+        {% endfor %}
+        </ul>
         <ul class="detail-comments-list"></ul>
     </section>
 {% endblock %}

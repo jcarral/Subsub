@@ -36,6 +36,11 @@ post_tag:
   path: /add/tag
   defaults: { _controller: PicBundle:Post:addTag }
 
+post_comment:
+  path: /add/comment
+  defaults: { _controller: PicBundle:Comment:add }
+
+
 post_rating:
   path: /add/rating
   defaults: { _controller: PicBundle:Rating:add }
@@ -43,3 +48,7 @@ post_rating:
 rating_count:
   path: /rating/count/{id}
   defaults: { _controller: PicBundle:Rating:count }
+
+comment_count:
+  path: /comment/count/{id}
+  defaults: { _controller: PicBundle:Comment:count }

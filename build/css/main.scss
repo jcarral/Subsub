@@ -53,6 +53,9 @@ li{
 .column{
   display: flex;
   flex-direction: column;
+  &.center-h{
+    align-items: center;
+  }
 }
 
 .hidden{

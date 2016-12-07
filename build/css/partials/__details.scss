@@ -1,3 +1,5 @@
+$commentFormColor: $greenMaterialColor;
+
 .detail{
   &-divider{
     width: 100%;
@@ -87,14 +89,24 @@
     }
 
     form{
-      width: 100%;
+      width: 810px;
+      margin: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-top: 10px;
+      p{
+        align-self: flex-start;
+        color: $commentFormColor;
+        font-weight: bold;
+      }
       textarea{
-        width: 90%;
+        width: 100%;
+        height: 60px;
         margin: 10px auto;
         resize: none;
+        border: 0;
+        border-bottom: 2px solid $commentFormColor;
       }
     }
   }
@@ -143,7 +155,77 @@
   cursor: pointer;
   i{
     font-size: 1.25em;
-      color: #009688;
+      color: $greenMaterialColor;
 
+  }
+}
+
+.comment-input{
+  width: 100%;
+  margin: 10px auto 0 auto;
+  padding: 5px 10px;
+  border: 0;
+  border-bottom: 2px solid $commentFormColor;
+  font-size: 1em;
+}
+
+.comment-submit{
+  width: 200px;
+  padding: 10px;
+  border-radius: 0;
+  border: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  cursor: pointer;
+  background-color: $commentFormColor;
+  transition: all .3s ease-out;
+  color: #FAFAFA;
+  font-size: .75em;
+  &:hover{
+    background-color: darken($commentFormColor, 5%);
+
+  }
+}
+
+.comments-list{
+  width: 900px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.comment{
+  width: 100%;
+  border-top: 1px solid #DBDBDB;
+  border-bottom: 1px solid #DBDBDB;
+  padding: 5px 0;
+
+  &-info{
+    width: 800px;
+    margin-left: 20px;
+    margin-top: 5px;
+
+    &-header{
+      width: 100;
+      align-items: center;
+      border-bottom: 1px solid #DBDBDB;
+      padding-bottom: 5px;
+      h5{
+        margin-left: 10px;
+        font-size: 1em;
+        font-weight: bold;
+      }
+      a{
+        color: $mainColor;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    }
+  }
+  img{
+    margin: 5px;
+  }
+  &-date{
+    align-self: flex-end;
+    color: #737373;
+    font-size: 0.7em;
   }
 }

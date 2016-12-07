@@ -6,5 +6,7 @@ const validarCanvas = (canvas) => {
   return canvas.toDataURL("image/png") !== null
 }
 
+
 export const validarFormPost = (titulo, img, status) =>  validarStatus(status) && validarImg(img)  && validarTitulo(titulo)
 export const validarFormAjax = (titulo, canvas, status) => validarStatus(status) && validarTitulo(titulo) && validarCanvas(canvas)
+export const validarComentario = (titulo, contenido) => validarTitulo(titulo) && validarTitulo(contenido)
