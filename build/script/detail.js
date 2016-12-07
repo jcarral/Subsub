@@ -116,13 +116,15 @@ const ratePost = (e) => {
         })
 }
 export const setDetail = () => {
-    if (tagInput === null) return false
-    tagInput.addEventListener('keypress', addTagHandler)
+    if(idHiddenInput === null) return false
+    if (tagInput !== null)
+      tagInput.addEventListener('keypress', addTagHandler)
     for (let i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent)
     }
     for (let i = 0; i < radioStars.length; i++) {
         radioStars[i].addEventListener('click', ratePost)
     }
+
     ratingCount()
 }

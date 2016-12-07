@@ -123,14 +123,15 @@ var ratePost = function ratePost(e) {
     });
 };
 var setDetail = exports.setDetail = function setDetail() {
-    if (tagInput === null) return false;
-    tagInput.addEventListener('keypress', addTagHandler);
+    if (idHiddenInput === null) return false;
+    if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler);
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
     }
     for (var _i = 0; _i < radioStars.length; _i++) {
         radioStars[_i].addEventListener('click', ratePost);
     }
+
     ratingCount();
 };
 
