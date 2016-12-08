@@ -1,0 +1,9 @@
+{% if app.user.id == user.id or is_granted('ROLE_ADMIN') %}
+    <li>
+        <input type="radio" name="tabs" id="tab5">
+        <label for="tab5">
+            <i class="fa fa-cog"></i></label>
+        <div id="tab-content-list" class="tab-content animated fadeIn">
+        </div>
+    </li>
+{% endif %}

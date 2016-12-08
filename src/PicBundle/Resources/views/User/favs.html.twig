@@ -1,0 +1,9 @@
+<li>
+  <input type="radio" name="tabs" id="tab2">
+          <label for="tab2"><i class="fa fa-heart-o"></i>Favs</label>
+          <div id="tab-content-list" class="tab-content animated fadeIn">
+            {% for fav in favs %}
+            {{fav.post.title}}
+            {% endfor %}
+          </div>
+</li>

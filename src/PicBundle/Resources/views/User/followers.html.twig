@@ -1,0 +1,9 @@
+<li>
+  <input type="radio" name="tabs" id="tab3">
+          <label for="tab3"><i class="fa fa-users"></i>Seguidores</label>
+          <div id="tab-content-list" class="tab-content animated fadeIn">
+            {% for follow in following %}
+              {{follow.follower.name}}
+            {% endfor %}
+          </div>
+</li>

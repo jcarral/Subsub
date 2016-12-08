@@ -70,4 +70,36 @@ class UserController extends Controller
         "form" => $form->createView()
       ));
     }
+
+
+
+    public function meAction(Request $request)
+    {
+        $user = $this->getUser();
+        return $this->renderUserProfile($user);
+    }
+
+    public function detailAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user_repo = $em->getRepository('PicBundle:User');
+        $user = $user_repo->find(array('id'=>$id));
+        return $this->renderUserProfile($user);
+    }
+
+    private function renderUserProfile($user){
+      if($user == null) return $this->redirect($this->generateUrl('login'));
+      $posts = $user->getUserPost();
+      $favs = $user->getUserFavs();
+      $followers = $user->getUserFollowers();
+      $following = $user->getUserStalker();
+
+      return $this->render('PicBundle:User:profile.html.twig', array(
+        'user' => $user,
+        'posts' => $posts,
+        'favs' => $favs,
+        'followers' => $followers,
+        'following' => $following
+      ));
+    }
 }

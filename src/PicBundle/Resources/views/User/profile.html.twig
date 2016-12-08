@@ -1,0 +1,15 @@
+{% extends "PicBundle::layout.html.twig" %}
+{% block content %}
+    <div class="upload-title">
+        <h2>{{user.name}}</h2>
+        <p></p>
+    </div>
+
+    <ul class="profile-tabs">
+        {% include 'PicBundle:User:post_list.html.twig'%}
+        {% include 'PicBundle:User:favs.html.twig'%}
+        {% include 'PicBundle:User:followers.html.twig'%}
+        {% include 'PicBundle:User:following.html.twig'%}
+        {% include 'PicBundle:User:edit.html.twig'%}
+    </ul>
+{% endblock %}

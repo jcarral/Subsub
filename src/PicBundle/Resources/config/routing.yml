@@ -52,3 +52,11 @@ rating_count:
 comment_count:
   path: /comment/count/{id}
   defaults: { _controller: PicBundle:Comment:count }
+
+user_me:
+  path: /me
+  defaults: { _controller: PicBundle:User:me }
+
+user_profile:
+  path: /user/{id}
+  defaults: { _controller: PicBundle:User:detail }

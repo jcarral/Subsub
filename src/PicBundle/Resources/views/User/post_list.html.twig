@@ -1,0 +1,9 @@
+<li>
+  <input type="radio" checked name="tabs" id="tab1">
+          <label for="tab1"><i class="fa fa-picture-o"></i>Fotos</label>
+          <div id="tab-content-list" class="tab-content animated fadeIn">
+              {% for post in posts %}
+              {{post.title}}
+              {% endfor %}
+          </div>
+</li>

@@ -1,0 +1,77 @@
+.profile-tabs {
+    width: 900px;
+    float: none;
+    list-style: none;
+    position: relative;
+    padding: 0;
+    margin: 10px auto;
+
+    input[type=radio] {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    li {
+        float: left;
+    }
+
+    label {
+        display: block;
+        padding: 5px 20px;
+        //border-radius: 2px 2px 0 0;
+        color: #6f6d6d;
+        font-size: 0.9em;
+        font-weight: normal;
+        font-family: 'Roboto';
+        background: rgba(255,255,255,0.2);
+        cursor: pointer;
+        position: relative;
+        top: 3px;
+        transition: all 0.2s ease-in-out;
+        border-radius: 3px 3px 0 0;
+        background-color: #f6f6f6;
+        border-top: 1px solid #bbbbbb;
+        border-right: 1px solid #bbbbbb;
+        border-left: 1px solid #bbbbbb;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        &:hover {
+            background: rgba(255,255,255,0.9);
+            top: 0;
+        }
+
+      i{
+        margin-right: 10px;
+      }
+    }
+}
+
+[id^=tab]:checked + label {
+    background: darken(#DBDBDB, 10%);
+    color: white;
+    top: 0;
+    background-color: $mainColor;
+    border-color: darken($mainColor, 10%);
+}
+
+[id^=tab]:checked ~ [id^=tab-content] {
+    display: block;
+}
+
+.tab-content {
+    z-index: 2;
+    display: none;
+    text-align: left;
+    width: 100%;
+    font-size: 20px;
+    line-height: 140%;
+    padding-top: 10px;
+    padding: 15px;
+    color: black;
+    position: absolute;
+    top: 28px;
+    left: 0;
+    animation-duration: 0.5s;
+    border-top: 2px solid $mainColor;
+    background-color: white;
+}
