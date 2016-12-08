@@ -35,11 +35,11 @@ class User implements UserInterface
 
     public function getUserStalker()
     {
-        return $this->userStalker;
+        return $this->userFollowers;
     }
     public function getUserFollowers()
     {
-        return $this->userFollowers;
+        return $this->userStalker;
     }
     public function getUserRatings()
     {

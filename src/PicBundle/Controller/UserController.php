@@ -89,17 +89,27 @@ class UserController extends Controller
 
     private function renderUserProfile($user){
       if($user == null) return $this->redirect($this->generateUrl('login'));
+      $em = $this->getDoctrine()->getManager();
+      $follower_repo = $em->getRepository('PicBundle:Follower');
+
       $posts = $user->getUserPost();
       $favs = $user->getUserFavs();
       $followers = $user->getUserFollowers();
       $following = $user->getUserStalker();
+      $follower = $this->getuser();
+      if($follower == null) $imFollowing = false;
+
+      $follow_search = $follower_repo->findOneBy(array('follower'=>$follower, 'user'=>$user));
+      if(count($follow_search) == 0) $imFollowing = false;
+      else $imFollowing = true;
 
       return $this->render('PicBundle:User:profile.html.twig', array(
         'user' => $user,
-        'posts' => $posts,
+        'posts' => $posts->slice(0, 20),
         'favs' => $favs,
         'followers' => $followers,
-        'following' => $following
+        'following' => $following,
+        'imFollowing' => $imFollowing
       ));
     }
 }

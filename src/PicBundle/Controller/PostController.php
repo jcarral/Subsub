@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use PicBundle\Entity\Post;
+use PicBundle\Entity\Follower;
+use PicBundle\Entity\User;
+
 use PicBundle\Form\PostType;
 
 class PostController extends Controller
@@ -111,15 +114,25 @@ class PostController extends Controller
     {
       $em = $this->getDoctrine()->getManager();
       $post_repo = $em->getRepository('PicBundle:Post');
+      $follower_repo = $em->getRepository('PicBundle:Follower');
+      $user_repo = $em->getRepository('PicBundle:User');
 
         $post = $post_repo->findOneBy(array('id' => $postId));
         $listTags = $post_repo->getAllPostTags($post);
         $comments = $post->getPostComments();
+        $follower = $this->getUser();
+        if($follower != null){
+          $user = $user_repo->findOneBy(array('id'=>$post->getAuthor()->getId()));
+          $follow_search = $follower_repo->findOneBy(array('follower'=>$follower, 'user'=>$user));
+          if(count($follow_search) == 0) $following = false;
+          else $following = true;
+        }
         return $this->render('PicBundle:Post:detail.html.twig',
           array(
             'post' => $post,
             'tags' => $listTags,
-            'comments' => $comments
+            'comments' => $comments,
+            'following' => $following
           )
         );
     }

@@ -1,7 +1,18 @@
 {% extends "PicBundle::layout.html.twig" %}
 {% block content %}
     <div class="upload-title">
-        <h2>{{user.name}}</h2>
+        <h2>{{user.name}}
+
+        {% if app.user != null %}
+            {% if imFollowing == false %}
+                <span class="btn btn-follow" id="btnFollow" data-id="{{user.id}}">
+                    <i class="fa fa-user-plus"></i>Seguir</span>
+            {% else %}
+                <span class="btn btn-not-follow" id="btnFollow" data-id="{{user.id}}">
+                    <i class="fa fa-user-plus"></i>Unfollow</span>
+            {% endif %}
+        {% endif %}
+        </h2>
         <p></p>
     </div>
 
@@ -12,4 +23,7 @@
         {% include 'PicBundle:User:following.html.twig'%}
         {% include 'PicBundle:User:edit.html.twig'%}
     </ul>
-{% endblock %}
+    <div class="separator" style="height:{{((posts|length / 4) < 1)?300:200*((posts|length / 4)+1)}}px; width:100%;" id="footerSeparator">
+      <div class="separator hidden" style="height:{{((favs|length / 4) < 1)?300:200*((favs|length / 4)+1)}}px; width:100%;" id="footerSeparatorFav">
+
+        {% endblock %}

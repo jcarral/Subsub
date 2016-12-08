@@ -1,9 +1,23 @@
 <li>
   <input type="radio" name="tabs" id="tab4">
-          <label for="tab4"><i class="fa fa-user-secret"></i>Siguiendo</label>
+          <label for="tab4" class="tab-label"><i class="fa fa-user-secret"></i>Siguiendo</label>
           <div id="tab-content-list" class="tab-content animated fadeIn">
-            {% for follower in followers %}
-              {{follower.user.name}}
-            {% endfor %}
+            {% if following|length > 0 %}
+            <ul class="follow-list">
+              {% for follow in following %}
+              <li class="follow-item row center-v space-bet-h">
+                <a href="{{ path('user_profile', {'id': follow.user.id}) }}"  class="user">
+                  <i class="fa fa-user"></i>
+                  {{follow.user.name}}
+                </a>
+                {% if app.user != null and (app.user.id == user.id or is_granted('ROLE_ADMIN')) %}
+                  <div class="btn btn-unfollow" data-id="{{follow.user.id}}">Unfollow</div>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+              {{user.name}} no sigue a nadie
+            {% endif %}
           </div>
 </li>

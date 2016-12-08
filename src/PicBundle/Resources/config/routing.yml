@@ -60,3 +60,7 @@ user_me:
 user_profile:
   path: /user/{id}
   defaults: { _controller: PicBundle:User:detail }
+
+follow:
+  path: /follow/{id}
+  defaults: { _controller: PicBundle:Follower:follow }

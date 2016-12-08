@@ -24,6 +24,7 @@ var commentTitle = document.getElementById('commentTitle');
 var commentContent = document.getElementById('commentContent');
 var commentSubmit = document.getElementById('commentSubmit');
 var commentList = document.getElementById('commentList');
+var btnFollow = document.getElementById('btnFollow');
 
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
@@ -165,6 +166,7 @@ var setDetail = exports.setDetail = function setDetail() {
 
     if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler);
     if (commentSubmit !== null) commentSubmit.addEventListener('click', commentPost);
+    if (btnFollow !== null) btnFollow.addEventListener('click', _utils.followUser);
 
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
@@ -231,25 +233,58 @@ var warningModal = exports.warningModal = function warningModal(message) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-var ajax = exports.ajax = function ajax(config) {
-    return new Promise(function (resolve, reject) {
-        var http = new XMLHttpRequest();
-        http.open(config.method, config.url, true);
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        http.onreadystatechange = function () {
-            if (http.readyState == 4 && http.status == 200) {
-                resolve(http.responseText);
-            } else if (http.status == 400) {
-                reject(http.responseText);
-            }
-        };
-        http.send(config.body);
-    });
+exports.followUser = exports.follow = exports.ajax = undefined;
+
+var _modals = require("./modals.js");
+
+var auxAjax = function auxAjax(config) {
+  return new Promise(function (resolve, reject) {
+    var http = new XMLHttpRequest();
+    http.open(config.method, config.url, true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.onreadystatechange = function () {
+      if (http.readyState == 4 && http.status == 200) {
+        resolve(http.responseText);
+      } else if (http.status == 400) {
+        reject(http.responseText);
+      }
+    };
+    http.send(config.body);
+  });
 };
 
-},{}],4:[function(require,module,exports){
+var auxfollow = function auxfollow(id) {
+  var config = {
+    url: "/follow/" + id,
+    method: 'POST'
+  };
+  return auxAjax(config);
+};
+
+var ajax = exports.ajax = auxAjax;
+
+var follow = exports.follow = auxfollow;
+
+var followUser = exports.followUser = function followUser(e) {
+
+  auxfollow(e.target.getAttribute('data-id')).then(function (data) {
+    console.log(data);
+    data = JSON.parse(data);
+    if (data.message === 'OK#0') {
+      e.target.classList = 'btn btn-not-follow';
+      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow';
+    } else if (data.message === 'OK#1') {
+      e.target.classList = 'btn btn-follow';
+      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Seguir';
+    } else {
+      (0, _modals.errorModal)('No se ha podido ejecutar la operación, deja de acosar, pesado');
+    }
+  });
+};
+
+},{"./modals.js":2}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -286,10 +321,55 @@ var _upload = require('./upload.js');
 
 var _detail = require('./detail.js');
 
+var _profile = require('./profile.js');
+
 (0, _detail.setDetail)();
 (0, _upload.setUpload)();
+(0, _profile.setProfile)();
 
-},{"./detail.js":1,"./upload.js":6}],6:[function(require,module,exports){
+},{"./detail.js":1,"./profile.js":6,"./upload.js":7}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setProfile = undefined;
+
+var _utils = require('./lib/utils.js');
+
+var _modals = require('./lib/modals.js');
+
+var separator = document.getElementById('footerSeparator');
+var tabsLabel = document.getElementsByClassName('tab-label');
+var followBtns = document.getElementsByClassName('btn-unfollow');
+var btnFollow = document.getElementById('btnFollow');
+
+var unfollow = function unfollow(e) {
+  follow(e.target.getAttribute('data-id')).then(function (data) {
+    data = JSON.parse(data);
+    if (data.message === 'OK#0' || data.message === 'OK#1') location.reload();else (0, _modals.errorModal)('No se ha podido hacer unfollow, prueba más tarde. Sigue no funciona te jodes y dejas de acosar la próxima vez');
+  });
+};
+var setProfile = exports.setProfile = function setProfile() {
+  if (separator === null) return false;
+  if (btnFollow !== null) btnFollow.addEventListener('click', _utils.followUser);
+
+  var _loop = function _loop(i) {
+    tabsLabel[i].addEventListener('click', function () {
+      return footerSeparator.classList = i === 0 ? '' : 'hidden';
+    });
+  };
+
+  for (var i = 0; i < tabsLabel.length; i++) {
+    _loop(i);
+  }
+
+  for (var _i = 0; _i < followBtns.length; _i++) {
+    followBtns[_i].addEventListener('click', _utils.followUser);
+  }
+};
+
+},{"./lib/modals.js":2,"./lib/utils.js":3}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

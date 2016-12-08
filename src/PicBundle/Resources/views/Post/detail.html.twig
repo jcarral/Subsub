@@ -20,10 +20,15 @@
                 <div class="row center-v space-bet-h">
                     <div class="">
                         <i class="fa fa-user"></i>
-                        {{post.author.name}}
+                        <a href="{{path('user_profile', {'id': post.author.id})}}">{{post.author.name}}</a>
                     </div>
-                    <div class="btn btn-follow">
-                      <i class="fa fa-user-plus"></i>Seguir</div>
+                        {% if app.user != null %}
+                        {% if following == false %}
+                        <div class="btn btn-follow" id="btnFollow" data-id="{{app.user.id}}"><i class="fa fa-user-plus"></i>Seguir</div>
+                          {% else %}
+                            <div class="btn btn-not-follow" id="btnFollow" data-id="{{app.user.id}}"><i class="fa fa-user-plus"></i>Unfollow</div>
+                            {% endif %}
+                      {% endif %}
                 </div>
 
             </div>

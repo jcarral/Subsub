@@ -1,9 +1,18 @@
 <li>
   <input type="radio" name="tabs" id="tab2">
-          <label for="tab2"><i class="fa fa-heart-o"></i>Favs</label>
+          <label for="tab2" class="tab-label"><i class="fa fa-heart-o"></i>Favs</label>
           <div id="tab-content-list" class="tab-content animated fadeIn">
-            {% for fav in favs %}
-            {{fav.post.title}}
-            {% endfor %}
+            {% if favs|length > 0 %}
+            <ul class="profile-posts">
+              {% for fav in favs %}
+              <li class="profile-posts--item">
+                <img src="{{ asset('uploads/'~fav.post.image)}}" alt="" height="150px" width="150px">
+                <a href="{{ path('post_detail', {'postId': fav.post.id})}}">{{fav.post.title|length > 9 ? fav.post.title|slice(0, 10) ~ '...' : fav.post.title}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+              No hay post marcado como favorito
+            {% endif %}
           </div>
 </li>

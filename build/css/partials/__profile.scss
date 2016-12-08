@@ -5,6 +5,7 @@
     position: relative;
     padding: 0;
     margin: 10px auto;
+    max-height: 1000px;
 
     input[type=radio] {
         position: absolute;
@@ -35,14 +36,15 @@
         border-right: 1px solid #bbbbbb;
         border-left: 1px solid #bbbbbb;
         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+
         &:hover {
             background: rgba(255,255,255,0.9);
             top: 0;
         }
 
-      i{
-        margin-right: 10px;
-      }
+        i {
+            margin-right: 10px;
+        }
     }
 }
 
@@ -65,7 +67,6 @@
     width: 100%;
     font-size: 20px;
     line-height: 140%;
-    padding-top: 10px;
     padding: 15px;
     color: black;
     position: absolute;
@@ -74,4 +75,72 @@
     animation-duration: 0.5s;
     border-top: 2px solid $mainColor;
     background-color: white;
+    background: rgba(250,250,250,1);
+    background: -moz-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(250,250,250,1)), color-stop(100%, rgba(255,255,255,1)));
+    background: -webkit-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);
+    background: -o-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(top, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(to bottom, rgba(250,250,250,1) 0%, rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr= '#fafafa', endColorstr='#ffffff', GradientType=0 );
+}
+
+.profile-posts {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    &--item {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        width: 150px;
+        height: 150px;
+        position: relative;
+        margin: 20px;
+
+        img {
+            position: relative;
+            top: 0;
+        }
+
+        a {
+            width: 150px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.2);
+            position: relative;
+            bottom: 46px;
+            cursor: pointer;
+            display: block;
+            padding: 5px;
+            color: #FFFFFF;
+            font-family: 'Roboto';
+            font-weight: lighter;
+            font-size: 0.8em;
+        }
+    }
+}
+
+.follow-list {
+    width: 100%;
+
+    .follow-item {
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        margin: 10px;
+        font-size: 0.9em;
+        font-family: 'Roboto';
+        padding: 5px 20px;
+        width: 300px;
+
+        .user {
+            font-weight: bold;
+            color: $mainColor;
+
+            i {
+                margin-right: 10px;
+                color: $darkColor;
+            }
+        }
+    }
 }

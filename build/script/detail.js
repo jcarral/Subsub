@@ -1,5 +1,7 @@
 import {
-    ajax
+    ajax,
+    follow,
+    followUser
 } from './lib/utils.js'
 import {
     warningModal,
@@ -19,6 +21,7 @@ const commentTitle = document.getElementById('commentTitle')
 const commentContent = document.getElementById('commentContent')
 const commentSubmit = document.getElementById('commentSubmit')
 const commentList = document.getElementById('commentList')
+const btnFollow = document.getElementById('btnFollow')
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -164,11 +167,14 @@ const commentPost = (e) => {
     })
 }
 
+
+
 export const setDetail = () => {
     if(idHiddenInput === null) return false
 
     if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler)
     if(commentSubmit !== null) commentSubmit.addEventListener('click', commentPost)
+    if(btnFollow !== null) btnFollow.addEventListener('click', followUser)
 
     for (let i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent)
