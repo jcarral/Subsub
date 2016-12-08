@@ -121,6 +121,7 @@ class PostController extends Controller
         $listTags = $post_repo->getAllPostTags($post);
         $comments = $post->getPostComments();
         $follower = $this->getUser();
+        $following = false;
         if($follower != null){
           $user = $user_repo->findOneBy(array('id'=>$post->getAuthor()->getId()));
           $follow_search = $follower_repo->findOneBy(array('follower'=>$follower, 'user'=>$user));

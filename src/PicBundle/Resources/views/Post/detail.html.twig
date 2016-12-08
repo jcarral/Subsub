@@ -90,12 +90,13 @@
         </aside>
     </section>
     <section class="detail-comments">
+
+        {% if app.user != null %}
         <header class="detail-comments--header">
             <h5>
                 <i class="fa fa-commenting-o"></i>Nuevo comentario</h5>
 
         </header>
-        {% if app.user != null %}
             <form action="" class="detail-comments-new column">
                 <p>Añadir nuevo comentario</p>
                 <input type="text" name="title" value="" placeholder="Introduce el asunto del comentario" id="commentTitle" class="comment-input">
