@@ -40,6 +40,13 @@ post_comment:
   path: /add/comment
   defaults: { _controller: PicBundle:Comment:add }
 
+post_visibility:
+  path: /post/{id}/visibility
+  defaults: { _controller: PicBundle:Post:visibility }
+
+post_delete:
+  path: /post/{id}/delete
+  defaults: { _controller: PicBundle:Post:delete }
 
 post_rating:
   path: /add/rating
@@ -69,7 +76,7 @@ follow:
 follow_list:
   path: /follow/list/{id}
   defaults: { _controller: PicBundle:Follower:list }
-  
+
 easy_admin_bundle:
     resource: "@EasyAdminBundle/Controller/"
     type:     annotation

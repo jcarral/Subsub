@@ -1,7 +1,8 @@
 import {
     ajax,
     follow,
-    followUser
+    followUser,
+    draggable
 } from './lib/utils.js'
 import {
     warningModal,
@@ -22,6 +23,8 @@ const commentContent = document.getElementById('commentContent')
 const commentSubmit = document.getElementById('commentSubmit')
 const commentList = document.getElementById('commentList')
 const btnFollow = document.getElementById('btnFollow')
+const draggableFrame = document.getElementById('draggable')
+const editVisibility = document.getElementsByClassName('edit-visibility')
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -165,7 +168,16 @@ const commentPost = (e) => {
     })
 }
 
+const editPostVisibility = (e) => {
+  let radioTarget = document.getElementById(e.target.getAttribute('for'))
+  let config = {
+    url: `/post/${idHiddenInput.value}/visibility`,
+    method: 'POST',
+    body: `status=${radioTarget.value}`
+  }
 
+  ajax(config).then(data => console.log(data))
+}
 
 export const setDetail = () => {
     if(idHiddenInput === null) return false
@@ -173,12 +185,16 @@ export const setDetail = () => {
     if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler)
     if(commentSubmit !== null) commentSubmit.addEventListener('click', commentPost)
     if(btnFollow !== null) btnFollow.addEventListener('click', (e) => followUser(e, e.target, null))
-
+    if(draggableFrame !== null) draggable(draggableFrame)
     for (let i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent)
     }
     for (let i = 0; i < radioStars.length; i++) {
         radioStars[i].addEventListener('click', ratePost)
+    }
+
+    for (let i = 0; i < editVisibility.length; i++) {
+      editVisibility[i].addEventListener('click', editPostVisibility)
     }
 
     ratingCount()

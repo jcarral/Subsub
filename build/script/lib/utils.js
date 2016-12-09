@@ -26,6 +26,33 @@ const auxfollow = (id) => {
   return auxAjax(config)
 }
 
+
+const drag_start = (event) => {
+    var style = window.getComputedStyle(event.target, null);
+    event.dataTransfer.setData("text/plain",
+    (parseInt(style.getPropertyValue("left"),10) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top"),10) - event.clientY));
+}
+
+const drag_over = (event) => {
+    event.preventDefault();
+    return false;
+}
+
+const drop = (event) => {
+    let offset = event.dataTransfer.getData("text/plain").split(',');
+    let dm = document.getElementById('draggable');
+    dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+    dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+    event.preventDefault();
+    return false;
+}
+
+export const draggable = (dragItem) => {
+  dragItem.addEventListener('dragstart',drag_start,false);
+  document.body.addEventListener('dragover',drag_over,false);
+  document.body.addEventListener('drop',drop,false);
+}
+
 export const ajax = auxAjax
 
 export const follow = auxfollow

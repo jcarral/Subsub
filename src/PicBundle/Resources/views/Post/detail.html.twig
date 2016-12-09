@@ -87,6 +87,28 @@
                     </li>
                 {% endfor %}
             </ul>
+                {% if app.user != null and (app.user.id == post.author.id or is_granted('ROLE_ADMIN')) %}
+
+
+                <div class="edit-frame" id="draggable" draggable="true">
+                  <h5>
+                      <i class="fa fa-wrench"></i>
+                      Ajustes</h5>
+                        <div class="detail-divider"></div>
+                      <div class="form-radio--status column">
+                        <input type="radio" name="post_status" value="public" {{(post.status == 'public')?'checked':''}} id="pri_pub">
+                        <label class="edit-visibility" for="pri_pub">Público</label>
+                        <input type="radio" name="post_status" value="protected" {{(post.status == 'protected')?'checked':''}} id="pri_pro">
+                        <label class="edit-visibility" for="pri_pro">Usuarios</label>
+                        <input type="radio" name="post_status" value="followers" {{(post.status == 'followers')?'checked':''}} id="pri_fol">
+                        <label class="edit-visibility" for="pri_fol">Mis seguidores</label>
+                        <input type="radio" name="post_status" value="private" id="pri_pri" {{(post.status == 'private')?'checked':''}}>
+                        <label class="edit-visibility" for="pri_pri">Privado</label>
+                      </div>
+                      <div class="btn btn-delete"><i class="fa fa-trash"></i>Borrar</div>
+                </div>
+
+                {% endif %}
         </aside>
     </section>
     <section class="detail-comments">
@@ -127,4 +149,5 @@
         </ul>
         <ul class="detail-comments-list"></ul>
     </section>
+
 {% endblock %}

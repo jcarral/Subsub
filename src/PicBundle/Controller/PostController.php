@@ -121,6 +121,7 @@ class PostController extends Controller
         $listTags = $post_repo->getAllPostTags($post);
         $comments = $post->getPostComments();
         $follower = $this->getUser();
+        if(!$this->accessToPost($post, $follower)) return $this->redirect('/');
         $following = false;
         if($follower != null){
           $user = $user_repo->findOneBy(array('id'=>$post->getAuthor()->getId()));
@@ -149,6 +150,58 @@ class PostController extends Controller
       if(is_array($mssg)) return new JsonResponse(array('message' => $mssg[0], 'id' => $mssg[1]));
       else return new JsonResponse(array('message' => $mssg));
 
+    }
+
+    public function visibilityAction(Request $request, $id)
+    {
+      if(!$this->isOwnerOrAdmin($id)) return new JsonResponse(array('message' => 'ERROR#0'));
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+      $post = $post_repo->findOneBy(array('id' => $id));
+      $visibility = $request->request->get('status');
+      if(!$this->validVisibility($visibility)) return new JsonResponse(array('message' => 'ERROR#1'));
+      $post->setStatus($visibility);
+      $em->persist($post);
+      $em->flush();
+      return new JsonResponse(array('message' => 'OK#0', 'visibility' => $visibility));
+    }
+
+
+    private function accessToPost($post, $user){
+
+      $status = $post->getStatus();
+      if($user == null || $status == 'private') return false;
+      else if($status == "public" || $user->getRole() == "ROLE_ADMIN" || ($user != null && $status == "protected") || $post->getAuthor() == $user) return true;
+      else if($status == 'followers'){ //Solo seguidores
+        $followers = $post->getAuthor()->getUserFollowers();
+        foreach ($followers as $follower) {
+          if($follower == $user) return true;
+        }
+        return false;
+      }
+    }
+
+    private function validVisibility($val){
+      return $val == 'protected' || $val == 'private' || $val == 'public' || $val = 'followers';
+    }
+
+    public function deleteAction(Request $request, $id)
+    {
+        return $this->render('index.html.twig');
+    }
+
+    private function isOwnerOrAdmin($id){
+      $user = $this->getUser();
+      if($user == null) return false;
+      else if($user->getRole() == 'ROLE_ADMIN') return true;
+      else return $this->isOwner($user, $id);
+    }
+
+    private function isOwner($user, $id){
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+      $post = $post_repo->findOneBy(array('id'=>$id, 'author'=>$user));
+      return count($post) > 0;
     }
 
     private function validTag($tag, $postId){

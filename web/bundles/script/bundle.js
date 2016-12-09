@@ -25,6 +25,8 @@ var commentContent = document.getElementById('commentContent');
 var commentSubmit = document.getElementById('commentSubmit');
 var commentList = document.getElementById('commentList');
 var btnFollow = document.getElementById('btnFollow');
+var draggableFrame = document.getElementById('draggable');
+var editVisibility = document.getElementsByClassName('edit-visibility');
 
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
@@ -159,6 +161,19 @@ var commentPost = function commentPost(e) {
     });
 };
 
+var editPostVisibility = function editPostVisibility(e) {
+    var radioTarget = document.getElementById(e.target.getAttribute('for'));
+    var config = {
+        url: '/post/' + idHiddenInput.value + '/visibility',
+        method: 'POST',
+        body: 'status=' + radioTarget.value
+    };
+
+    (0, _utils.ajax)(config).then(function (data) {
+        return console.log(data);
+    });
+};
+
 var setDetail = exports.setDetail = function setDetail() {
     if (idHiddenInput === null) return false;
 
@@ -167,12 +182,16 @@ var setDetail = exports.setDetail = function setDetail() {
     if (btnFollow !== null) btnFollow.addEventListener('click', function (e) {
         return (0, _utils.followUser)(e, e.target, null);
     });
-
+    if (draggableFrame !== null) (0, _utils.draggable)(draggableFrame);
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
     }
     for (var _i = 0; _i < radioStars.length; _i++) {
         radioStars[_i].addEventListener('click', ratePost);
+    }
+
+    for (var _i2 = 0; _i2 < editVisibility.length; _i2++) {
+        editVisibility[_i2].addEventListener('click', editPostVisibility);
     }
 
     ratingCount();
@@ -233,34 +252,59 @@ var warningModal = exports.warningModal = function warningModal(message) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.followUser = exports.follow = exports.ajax = undefined;
+exports.followUser = exports.follow = exports.ajax = exports.draggable = undefined;
 
 var _modals = require("./modals.js");
 
 var auxAjax = function auxAjax(config) {
-  return new Promise(function (resolve, reject) {
-    var http = new XMLHttpRequest();
-    http.open(config.method, config.url, true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.onreadystatechange = function () {
-      if (http.readyState == 4 && http.status == 200) {
-        resolve(http.responseText);
-      } else if (http.status == 400) {
-        reject(http.responseText);
-      }
-    };
-    http.send(config.body);
-  });
+    return new Promise(function (resolve, reject) {
+        var http = new XMLHttpRequest();
+        http.open(config.method, config.url, true);
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.onreadystatechange = function () {
+            if (http.readyState == 4 && http.status == 200) {
+                resolve(http.responseText);
+            } else if (http.status == 400) {
+                reject(http.responseText);
+            }
+        };
+        http.send(config.body);
+    });
 };
 
 var auxfollow = function auxfollow(id) {
-  var config = {
-    url: "/follow/" + id,
-    method: 'POST'
-  };
-  return auxAjax(config);
+    var config = {
+        url: "/follow/" + id,
+        method: 'POST'
+    };
+    return auxAjax(config);
+};
+
+var drag_start = function drag_start(event) {
+    var style = window.getComputedStyle(event.target, null);
+    event.dataTransfer.setData("text/plain", parseInt(style.getPropertyValue("left"), 10) - event.clientX + ',' + (parseInt(style.getPropertyValue("top"), 10) - event.clientY));
+};
+
+var drag_over = function drag_over(event) {
+    event.preventDefault();
+    return false;
+};
+
+var drop = function drop(event) {
+    var offset = event.dataTransfer.getData("text/plain").split(',');
+    var dm = document.getElementById('draggable');
+    dm.style.left = event.clientX + parseInt(offset[0], 10) + 'px';
+    dm.style.top = event.clientY + parseInt(offset[1], 10) + 'px';
+    event.preventDefault();
+    return false;
+};
+
+var draggable = exports.draggable = function draggable(dragItem) {
+    dragItem.addEventListener('dragstart', drag_start, false);
+    document.body.addEventListener('dragover', drag_over, false);
+    document.body.addEventListener('drop', drop, false);
 };
 
 var ajax = exports.ajax = auxAjax;
@@ -269,22 +313,22 @@ var follow = exports.follow = auxfollow;
 
 var followUser = exports.followUser = function followUser(e, btn, callback) {
 
-  auxfollow(e.target.getAttribute('data-id')).then(function (data) {
-    data = JSON.parse(data);
-    if (data.message === 'OK#0') {
-      console.log('A');
-      btn.classList = 'btn btn-not-follow';
-      btn.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow';
-    } else if (data.message === 'OK#1') {
-      console.log('B');
-      btn.classList = 'btn btn-follow';
-      btn.innerHTML = '<i class="fa fa-user-plus"></i>Seguir';
-      console.log(e.target);
-    } else {
-      return (0, _modals.errorModal)('No se ha podido ejecutar la operación, deja de acosar, pesado');
-    }
-    callback();
-  });
+    auxfollow(e.target.getAttribute('data-id')).then(function (data) {
+        data = JSON.parse(data);
+        if (data.message === 'OK#0') {
+            console.log('A');
+            btn.classList = 'btn btn-not-follow';
+            btn.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow';
+        } else if (data.message === 'OK#1') {
+            console.log('B');
+            btn.classList = 'btn btn-follow';
+            btn.innerHTML = '<i class="fa fa-user-plus"></i>Seguir';
+            console.log(e.target);
+        } else {
+            return (0, _modals.errorModal)('No se ha podido ejecutar la operación, deja de acosar, pesado');
+        }
+        callback();
+    });
 };
 
 },{"./modals.js":2}],4:[function(require,module,exports){
