@@ -2,12 +2,13 @@
 
 namespace PicBundle\Entity;
 
+use JsonSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * User.
  */
-class User implements UserInterface
+class User implements UserInterface, JsonSerializable
 {
     private $id;
     private $name;
@@ -173,5 +174,13 @@ class User implements UserInterface
     public function getPassword()
     {
         return $this->getPass();
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'name' => $this->name,
+            'id'=> $this->id,
+        );
     }
 }

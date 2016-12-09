@@ -47,13 +47,11 @@ var removeTagFromDb = function removeTagFromDb(element) {
 
 var removeTag = function removeTag() {
     this.remove();
-    'debugger';
     removeTagFromDb(this);
 };
 
 var removeParent = function removeParent() {
     this.parentElement.remove();
-    'debugger';
     removeTagFromDb(this.parentElement);
 };
 
@@ -267,20 +265,23 @@ var ajax = exports.ajax = auxAjax;
 
 var follow = exports.follow = auxfollow;
 
-var followUser = exports.followUser = function followUser(e) {
+var followUser = exports.followUser = function followUser(e, btn, callback) {
 
   auxfollow(e.target.getAttribute('data-id')).then(function (data) {
-    console.log(data);
     data = JSON.parse(data);
     if (data.message === 'OK#0') {
-      e.target.classList = 'btn btn-not-follow';
-      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow';
+      console.log('A');
+      btn.classList = 'btn btn-not-follow';
+      btn.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow';
     } else if (data.message === 'OK#1') {
-      e.target.classList = 'btn btn-follow';
-      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Seguir';
+      console.log('B');
+      btn.classList = 'btn btn-follow';
+      btn.innerHTML = '<i class="fa fa-user-plus"></i>Seguir';
+      console.log(e.target);
     } else {
-      (0, _modals.errorModal)('No se ha podido ejecutar la operación, deja de acosar, pesado');
+      return (0, _modals.errorModal)('No se ha podido ejecutar la operación, deja de acosar, pesado');
     }
+    callback();
   });
 };
 
@@ -331,7 +332,7 @@ var _profile = require('./profile.js');
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.setProfile = undefined;
 
@@ -341,32 +342,86 @@ var _modals = require('./lib/modals.js');
 
 var separator = document.getElementById('footerSeparator');
 var tabsLabel = document.getElementsByClassName('tab-label');
-var followBtns = document.getElementsByClassName('btn-unfollow');
 var btnFollow = document.getElementById('btnFollow');
+var followerList = document.getElementById('followerList');
+var followingList = document.getElementById('followingList');
+var userId = document.getElementById('userId');
+var followBtns = void 0;
+
+var createListElement = function createListElement(id, name) {
+    var content = '\n  <a href="/user/' + id + '"  class="user">\n      <i class="fa fa-user"></i>\n      ' + name + '\n    </a>\n  ';
+    return content;
+};
+
+var loadFollowerList = function loadFollowerList(list, wrapper, addBtn) {
+    wrapper.innerHTML = '';
+    if (list.length > 0) {
+        for (var i = 0; i < list.length; i++) {
+            var data = JSON.parse(list[i]);
+            var li = document.createElement('li');
+            var btn = '<div class="btn btn-unfollow" data-id="' + data.id + '">Unfollow</div>';
+            li.classList = 'follow-item row center-v space-bet-h';
+
+            li.innerHTML = '' + createListElement(data.id, data.name) + (addBtn ? btn : '');
+            wrapper.appendChild(li);
+        }
+    } else {
+        var _li = document.createElement('li');
+        _li.innerHTML = 'Vaya, parece que este tio es un solitario';
+        wrapper.appendChild(_li);
+    }
+};
+
+var reloadFollowerList = function reloadFollowerList() {
+    var config = {
+        url: '/follow/list/' + userId.getAttribute('data-id'),
+        method: 'POST'
+    };
+    (0, _utils.ajax)(config).then(function (data) {
+        data = JSON.parse(data);
+        loadFollowerList(data.followers, followerList, false);
+        loadFollowerList(data.following, followingList, data.owner);
+
+        followBtnsHandler();
+    });
+};
 
 var unfollow = function unfollow(e) {
-  follow(e.target.getAttribute('data-id')).then(function (data) {
-    data = JSON.parse(data);
-    if (data.message === 'OK#0' || data.message === 'OK#1') location.reload();else (0, _modals.errorModal)('No se ha podido hacer unfollow, prueba más tarde. Sigue no funciona te jodes y dejas de acosar la próxima vez');
-  });
-};
-var setProfile = exports.setProfile = function setProfile() {
-  if (separator === null) return false;
-  if (btnFollow !== null) btnFollow.addEventListener('click', _utils.followUser);
-
-  var _loop = function _loop(i) {
-    tabsLabel[i].addEventListener('click', function () {
-      return footerSeparator.classList = i === 0 ? '' : 'hidden';
+    follow(e.target.getAttribute('data-id')).then(function (data) {
+        data = JSON.parse(data);
+        if (data.message === 'OK#0' || data.message === 'OK#1') location.reload();else (0, _modals.errorModal)('No se ha podido hacer unfollow, prueba más tarde. Sigue no funciona te jodes y dejas de acosar la próxima vez');
     });
-  };
+};
 
-  for (var i = 0; i < tabsLabel.length; i++) {
-    _loop(i);
-  }
+var followBtnsHandler = function followBtnsHandler() {
+    followBtns = document.getElementsByClassName('btn-unfollow');
+    for (var i = 0; i < followBtns.length; i++) {
+        followBtns[i].addEventListener('click', function (e) {
+            return (0, _utils.followUser)(e, btnFollow, reloadFollowerList);
+        });
+    }
+};
 
-  for (var _i = 0; _i < followBtns.length; _i++) {
-    followBtns[_i].addEventListener('click', _utils.followUser);
-  }
+var setProfile = exports.setProfile = function setProfile() {
+    if (separator === null) return false;
+    if (btnFollow !== null) {
+        btnFollow.addEventListener('click', function (e) {
+            return (0, _utils.followUser)(e, btnFollow, reloadFollowerList);
+        });
+        btnFollow.addEventListener('click', reloadFollowerList);
+    }
+
+    var _loop = function _loop(i) {
+        tabsLabel[i].addEventListener('click', function () {
+            return footerSeparator.classList = i === 0 ? '' : 'hidden';
+        });
+    };
+
+    for (var i = 0; i < tabsLabel.length; i++) {
+        _loop(i);
+    }
+
+    followBtnsHandler();
 };
 
 },{"./lib/modals.js":2,"./lib/utils.js":3}],7:[function(require,module,exports){

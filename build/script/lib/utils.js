@@ -30,20 +30,23 @@ export const ajax = auxAjax
 
 export const follow = auxfollow
 
-export const followUser = (e) => {
+export const followUser = (e, btn, callback) => {
 
   auxfollow(e.target.getAttribute('data-id'))
   .then((data)=>{
-    console.log(data);
     data = JSON.parse(data)
     if(data.message === 'OK#0'){
-      e.target.classList ='btn btn-not-follow'
-      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow'
+      console.log('A');
+      btn.classList ='btn btn-not-follow'
+      btn.innerHTML = '<i class="fa fa-user-plus"></i>Unfollow'
     }else if(data.message === 'OK#1'){
-      e.target.classList = 'btn btn-follow'
-      e.target.innerHTML = '<i class="fa fa-user-plus"></i>Seguir'
+      console.log('B');
+      btn.classList = 'btn btn-follow'
+      btn.innerHTML = '<i class="fa fa-user-plus"></i>Seguir'
+      console.log(e.target);
     }else{
-      errorModal('No se ha podido ejecutar la operación, deja de acosar, pesado')
+      return errorModal('No se ha podido ejecutar la operación, deja de acosar, pesado')
     }
+    callback()
   })
 }

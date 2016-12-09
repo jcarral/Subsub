@@ -31,7 +31,7 @@ post_detail:
   path: /post/{postId}
   defaults: { _controller: PicBundle:Post:detail }
   requirements:
-        page: '\d+'
+        postId: '\d+'
 post_tag:
   path: /add/tag
   defaults: { _controller: PicBundle:Post:addTag }
@@ -64,3 +64,8 @@ user_profile:
 follow:
   path: /follow/{id}
   defaults: { _controller: PicBundle:Follower:follow }
+  requirements:
+        id: '\d+'
+follow_list:
+  path: /follow/list/{id}
+  defaults: { _controller: PicBundle:Follower:list }

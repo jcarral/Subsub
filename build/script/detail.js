@@ -46,13 +46,11 @@ const removeTagFromDb = function(element) {
 
 const removeTag = function() {
     this.remove()
-    'debugger'
     removeTagFromDb(this)
 }
 
 const removeParent = function() {
     this.parentElement.remove()
-    'debugger'
     removeTagFromDb(this.parentElement)
 }
 

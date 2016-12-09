@@ -24,6 +24,7 @@
         {% include 'PicBundle:User:edit.html.twig'%}
     </ul>
     <div class="separator" style="height:{{((posts|length / 4) < 1)?300:200*((posts|length / 4)+1)}}px; width:100%;" id="footerSeparator">
-      <div class="separator hidden" style="height:{{((favs|length / 4) < 1)?300:200*((favs|length / 4)+1)}}px; width:100%;" id="footerSeparatorFav">
+    <div class="separator hidden" style="height:{{((favs|length / 4) < 1)?300:200*((favs|length / 4)+1)}}px; width:100%;" id="footerSeparatorFav">
+    <span class="hidden" data-id={{user.id}} id="userId"></span>
 
         {% endblock %}
