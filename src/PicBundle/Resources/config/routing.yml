@@ -69,3 +69,8 @@ follow:
 follow_list:
   path: /follow/list/{id}
   defaults: { _controller: PicBundle:Follower:list }
+  
+easy_admin_bundle:
+    resource: "@EasyAdminBundle/Controller/"
+    type:     annotation
+    prefix:   /admin

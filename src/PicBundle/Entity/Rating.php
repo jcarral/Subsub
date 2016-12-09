@@ -71,4 +71,7 @@ class Rating
     {
         return $this->user;
     }
+    public function __toString(){
+      return 'Valoracion';
+    }
 }

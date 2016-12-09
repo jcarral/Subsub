@@ -74,3 +74,14 @@ assetic:
     use_controller: '%kernel.debug%'
     filters:
         cssrewrite: ~
+
+easy_admin:
+    entities:
+        - PicBundle\Entity\Comment
+        - PicBundle\Entity\Fav
+        - PicBundle\Entity\Follower
+        - PicBundle\Entity\Post
+        - PicBundle\Entity\PostTag
+        - PicBundle\Entity\Rating
+        - PicBundle\Entity\Tag
+        - PicBundle\Entity\User

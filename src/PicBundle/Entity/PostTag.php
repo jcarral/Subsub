@@ -45,4 +45,8 @@ class PostTag
     {
         return $this->tag;
     }
+
+    public function __toString(){
+      return 'Post&Tag';
+    }
 }

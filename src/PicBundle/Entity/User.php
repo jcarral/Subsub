@@ -183,4 +183,7 @@ class User implements UserInterface, JsonSerializable
             'id'=> $this->id,
         );
     }
+    public function __toString(){
+      return 'Usuario';
+    }
 }

@@ -39,4 +39,8 @@ class Follower
     {
         return $this->user;
     }
+
+    public function __toString(){
+      return 'Followers';
+    }
 }

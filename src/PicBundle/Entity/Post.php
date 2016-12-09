@@ -173,4 +173,8 @@ class Post
     {
         return $this->author;
     }
+
+    public function __toString(){
+      return 'Post';
+    }
 }
