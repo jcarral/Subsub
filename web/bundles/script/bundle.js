@@ -164,7 +164,9 @@ var setDetail = exports.setDetail = function setDetail() {
 
     if (tagInput !== null) tagInput.addEventListener('keypress', addTagHandler);
     if (commentSubmit !== null) commentSubmit.addEventListener('click', commentPost);
-    if (btnFollow !== null) btnFollow.addEventListener('click', _utils.followUser);
+    if (btnFollow !== null) btnFollow.addEventListener('click', function (e) {
+        return (0, _utils.followUser)(e, e.target, null);
+    });
 
     for (var i = removableTags.length - 1; i >= 0; i--) {
         removableTags[i].addEventListener('click', removeParent);
