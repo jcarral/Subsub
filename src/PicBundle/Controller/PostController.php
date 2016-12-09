@@ -170,8 +170,9 @@ class PostController extends Controller
     private function accessToPost($post, $user){
 
       $status = $post->getStatus();
-      if($user == null || $status == 'private') return false;
+      if($user == null) return false;
       else if($status == "public" || $user->getRole() == "ROLE_ADMIN" || ($user != null && $status == "protected") || $post->getAuthor() == $user) return true;
+      else if($status == 'private') return false;
       else if($status == 'followers'){ //Solo seguidores
         $followers = $post->getAuthor()->getUserFollowers();
         foreach ($followers as $follower) {

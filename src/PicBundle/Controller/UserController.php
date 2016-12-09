@@ -5,6 +5,8 @@ namespace PicBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use PicBundle\Entity\User;
 use PicBundle\Form\UserType;
 
@@ -45,6 +47,7 @@ class UserController extends Controller
 
             $user->setPassword($password);
             $user->setRole("ROLE_USER");
+            $user->setStatus('deactivated');
             $user->setImagen(null);
 
             $em = $this->getDoctrine()->getEntityManager();
@@ -86,6 +89,34 @@ class UserController extends Controller
         $user = $user_repo->find(array('id'=>$id));
         return $this->renderUserProfile($user);
     }
+
+    public function nameAction(Request $request)
+    {
+        $name = htmlspecialchars($request->request->get('name'));
+        $user = $this->getUser();
+        if($name == null) return new JsonResponse(array('message' => 'ERROR#0'));
+        if(strlen(trim($name, ' ')) < 3) return new JsonResponse(array('message' => 'ERROR#1'.$name));
+        if($user == null) return new JsonResponse(array('message' => 'ERROR#2'));
+        $em = $this->getDoctrine()->getManager();
+        $user->setName($name);
+        $em->persist($user);
+        $em->flush();
+        return new JsonResponse(array('message' => 'OK#0'));
+    }
+
+    public function visibilityAction(Request $request)
+    {
+      $status = htmlspecialchars($request->request->get('status'));
+      $user = $this->getUser();
+      if($status == null || ($status != 'public' && $status != 'private')) return new JsonResponse(array('message' => 'ERROR#0'));
+      if($user == null) return new JsonResponse(array('message' => 'ERROR#1'));
+      $em = $this->getDoctrine()->getManager();
+      $user->setStatus($status);
+      $em->persist($user);
+      $em->flush();
+      return new JsonResponse(array('message' => 'OK#0'));
+    }
+
 
     private function renderUserProfile($user){
       if($user == null) return $this->redirect($this->generateUrl('login'));

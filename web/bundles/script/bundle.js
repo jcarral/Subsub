@@ -392,6 +392,9 @@ var btnFollow = document.getElementById('btnFollow');
 var followerList = document.getElementById('followerList');
 var followingList = document.getElementById('followingList');
 var userId = document.getElementById('userId');
+var username = document.getElementById('editUsername');
+var editVisibility = document.getElementsByClassName('edit-visibility');
+
 var followBtns = void 0;
 
 var createListElement = function createListElement(id, name) {
@@ -448,6 +451,32 @@ var followBtnsHandler = function followBtnsHandler() {
     }
 };
 
+var editUsername = function editUsername(e) {
+    var config = {
+        url: '/user/name',
+        method: 'POST',
+        body: 'name=' + username.value
+    };
+
+    (0, _utils.ajax)(config).then(function (data) {
+        data = JSON.parse(data);
+        if (data.message === 'OK#0') location.reload();else (0, _modals.errorModal)('No se ha podido actualizar tu nombre ' + data.message);
+    });
+};
+
+var editPostVisibility = function editPostVisibility(e) {
+    var radioTarget = document.getElementById(e.target.getAttribute('for'));
+    var config = {
+        url: '/user/visibility',
+        method: 'POST',
+        body: 'status=' + radioTarget.value
+    };
+
+    (0, _utils.ajax)(config).then(function (data) {
+        return console.log(data);
+    });
+};
+
 var setProfile = exports.setProfile = function setProfile() {
     if (separator === null) return false;
     if (btnFollow !== null) {
@@ -455,6 +484,14 @@ var setProfile = exports.setProfile = function setProfile() {
             return (0, _utils.followUser)(e, btnFollow, reloadFollowerList);
         });
         btnFollow.addEventListener('click', reloadFollowerList);
+    }
+    if (username !== null) {
+        username.addEventListener('blur', function (e) {
+            if (username.value.trim() >= 3) editUsername();
+        });
+        username.addEventListener('keypress', function (e) {
+            if (e.keyCode == 13) editUsername();
+        });
     }
 
     var _loop = function _loop(i) {
@@ -465,6 +502,10 @@ var setProfile = exports.setProfile = function setProfile() {
 
     for (var i = 0; i < tabsLabel.length; i++) {
         _loop(i);
+    }
+
+    for (var _i = 0; _i < editVisibility.length; _i++) {
+        editVisibility[_i].addEventListener('click', editPostVisibility);
     }
 
     followBtnsHandler();

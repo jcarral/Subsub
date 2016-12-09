@@ -67,6 +67,17 @@ user_me:
 user_profile:
   path: /user/{id}
   defaults: { _controller: PicBundle:User:detail }
+  requirements:
+    id: '\d+'
+
+user_edit_name:
+  path: /user/name
+  defaults: { _controller: PicBundle:User:name }
+
+user_edit_visibility:
+  path: /user/visibility
+  defaults: { _controller: PicBundle:User:visibility }
+
 
 follow:
   path: /follow/{id}

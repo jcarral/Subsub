@@ -1,9 +1,24 @@
-{% if app.user != null and (app.user.id == user.id or is_granted('ROLE_ADMIN')) %}
+{% if app.user != null and ((app.user.id == user.id and app.user.status != 'deactivated' ) or is_granted('ROLE_ADMIN')) %}
     <li>
         <input type="radio" name="tabs" id="tab5">
         <label for="tab5" class="tab-label">
             <i class="fa fa-cog"></i></label>
-        <div id="tab-content-list" class="tab-content animated fadeIn">
-        </div>
+            <div id="tab-content-list" class="tab-content animated fadeIn">
+              <div class="row">
+                <div class="column edit-column">
+                  <p class="edit-label">Nombre de usuario:</p>
+                  <input type="text" class="form-input" name="" value="" placeholder="Nombre de usuario" id="editUsername">
+                </div>
+                <div class="row edit-column center-v">
+                  <p class="edit-label">Privacidad: </p>
+                  <div class="form-radio--status row">
+                    <input type="radio" name="post_status" value="public" {{(user.status == 'public')?'checked':''}} id="pri_pub">
+                    <label class="edit-visibility" for="pri_pub">Público</label>
+                    <input type="radio" name="post_status" value="private" id="pri_pri" {{(user.status == 'private')?'checked':''}}>
+                    <label class="edit-visibility" for="pri_pri">Privado</label>
+                  </div>
+                </div>
+              </div>
+            </div>
     </li>
 {% endif %}

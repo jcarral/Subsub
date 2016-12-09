@@ -14,6 +14,9 @@ const btnFollow = document.getElementById('btnFollow')
 const followerList = document.getElementById('followerList')
 const followingList = document.getElementById('followingList')
 const userId = document.getElementById('userId')
+const username = document.getElementById('editUsername')
+const editVisibility = document.getElementsByClassName('edit-visibility')
+
 let followBtns
 
 const createListElement = (id, name) => {
@@ -78,15 +81,54 @@ const followBtnsHandler = () => {
   }
 }
 
+const editUsername = (e) => {
+  let config = {
+    url : '/user/name',
+    method : 'POST',
+    body : `name=${username.value}`
+  }
+
+  ajax(config)
+    .then((data) => {
+      data = JSON.parse(data)
+      if(data.message === 'OK#0') location.reload()
+      else errorModal('No se ha podido actualizar tu nombre ' + data.message)
+    })
+}
+
+const editPostVisibility = (e) => {
+  let radioTarget = document.getElementById(e.target.getAttribute('for'))
+  let config = {
+    url: `/user/visibility`,
+    method: 'POST',
+    body: `status=${radioTarget.value}`
+  }
+
+  ajax(config).then(data => console.log(data))
+}
+
+
 export const setProfile = () => {
     if (separator === null) return false
     if (btnFollow !== null){
       btnFollow.addEventListener('click', (e) => followUser(e, btnFollow, reloadFollowerList))
       btnFollow.addEventListener('click', reloadFollowerList)
     }
+    if (username !== null){
+      username.addEventListener('blur', (e) => {
+        if(username.value.trim() >= 3) editUsername()
+      })
+      username.addEventListener('keypress', (e) => {
+        if(e.keyCode == 13) editUsername()
+      })
+    }
 
     for (let i = 0; i < tabsLabel.length; i++) {
         tabsLabel[i].addEventListener('click', () => footerSeparator.classList = (i === 0) ? '' : 'hidden')
+    }
+
+    for (let i = 0; i < editVisibility.length; i++) {
+      editVisibility[i].addEventListener('click', editPostVisibility)
     }
 
     followBtnsHandler()

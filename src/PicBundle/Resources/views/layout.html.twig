@@ -25,7 +25,14 @@
                 {% include "PicBundle::loginbtns.html.twig" %}
             </div>
         </header>
+
+
             <main class="container" style="margin-top: 56px">
+                {% if app.user != null and app.user.status == 'deactivated' %}
+              <aside class="header-alert">
+                <h4>Por favor, activa tu cuenta, mira en la bandeja de entrada. </h4>
+              </aside>
+{% endif %}
             {% block content %}
                 SubSub
             {% endblock %}
