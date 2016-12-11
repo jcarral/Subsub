@@ -48,6 +48,10 @@ post_delete:
   path: /post/{id}/delete
   defaults: { _controller: PicBundle:Post:delete }
 
+post_query:
+  path: /post/list
+  defaults: { _controller: PicBundle:Post:query }
+
 post_rating:
   path: /add/rating
   defaults: { _controller: PicBundle:Rating:add }
@@ -78,6 +82,9 @@ user_edit_visibility:
   path: /user/visibility
   defaults: { _controller: PicBundle:User:visibility }
 
+user_activate:
+  path: /user/activate/{token}
+  defaults: { _controller: PicBundle:User:activate }
 
 follow:
   path: /follow/{id}
