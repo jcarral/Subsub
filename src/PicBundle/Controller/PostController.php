@@ -121,7 +121,7 @@ class PostController extends Controller
         $listTags = $post_repo->getAllPostTags($post);
         $comments = $post->getPostComments();
         $follower = $this->getUser();
-        if(!$this->accessToPost($post, $follower)) return $this->redirect('/');
+        if(!$post_repo->accessToPost($post, $follower)) return $this->redirect('/');
         $following = false;
         if($follower != null){
           $user = $user_repo->findOneBy(array('id'=>$post->getAuthor()->getId()));
@@ -166,20 +166,24 @@ class PostController extends Controller
       return new JsonResponse(array('message' => 'OK#0', 'visibility' => $visibility));
     }
 
+    public function queryAction(Request $request)
+    {
+        $q = $request->query->get('q');
+        $author = $request->query->get('author');
+        $tag = $request->query->get('tag');
+        $em = $this->getDoctrine()->getManager();
+        $post_repo = $em->getRepository('PicBundle:Post');
+        $user = $this->getUser();
+        if($author != null) $posts = $post_repo->findPostsByAuthor($author, $user);
+        else if($tag != null) $posts = $post_repo->findPostsByTag($tag, $user);
+        else if($q != null) $posts = $post_repo->findPostByQuery($q, $user);
+        else $posts = $this->getAll();
 
-    private function accessToPost($post, $user){
-
-      $status = $post->getStatus();
-      if($user == null) return false;
-      else if($status == "public" || $user->getRole() == "ROLE_ADMIN" || ($user != null && $status == "protected") || $post->getAuthor() == $user) return true;
-      else if($status == 'private') return false;
-      else if($status == 'followers'){ //Solo seguidores
-        $followers = $post->getAuthor()->getUserFollowers();
-        foreach ($followers as $follower) {
-          if($follower == $user) return true;
-        }
-        return false;
-      }
+        return $this->render('PicBundle:Post:list.html.twig',
+          array(
+            'posts' => $posts,
+            )
+        );
     }
 
     private function validVisibility($val){

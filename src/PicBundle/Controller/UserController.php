@@ -157,8 +157,9 @@ class UserController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $follower_repo = $em->getRepository('PicBundle:Follower');
+        $post_repo = $em->getRepository('PicBundle:Post');
 
-        $posts = $user->getUserPost();
+        $posts = $post_repo->findPostsByAuthor($user->getId(), $this->getUser());
         $favs = $user->getUserFavs();
         $followers = $user->getUserFollowers();
         $following = $user->getUserStalker();
@@ -176,7 +177,7 @@ class UserController extends Controller
 
         return $this->render('PicBundle:User:profile.html.twig', array(
         'user' => $user,
-        'posts' => $posts->slice(0, 20),
+        'posts' => array_slice($posts, 0, 20),
         'favs' => $favs,
         'followers' => $followers,
         'following' => $following,
