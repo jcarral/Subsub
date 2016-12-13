@@ -1,20 +1,60 @@
 {% extends "PicBundle::layout.html.twig" %}
 {% block content %}
 
-    <ul class="post-list">
+    <ul class="post-list" id="listContainer">
         {% for post in posts %}
             <li class="post-list--item">
                 <a href="/post/{{post.id}}" class="card">
                     <div class="card-image">
-                        <img src="{{ asset("uploads/"~post.image)}}" alt="">
+                        <img src="{{ asset('uploads/'~post.image)}}" alt="">
                     </div>
                     <div class="card-content">
-                        <i class="fa fa-heart-o"></i>
+                        {% if app.user != null %}
+                            {% set isFav = false %}
+                            {% if post.postFavs %}
+                                {% for p in post.postFavs %}
+                                    {% if p.user == app.user %}
+                                        {% set isFav = true %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <i class="fa {{(isFav)?'fa-heart':'fa-heart-o'}} fav-btn" data-id="{{post.id}}"></i>
+                        {% endif %}
                         <p class="card-content--title">{{post.title}}</p>
-                        <p class="card-content--author">{{post.author.name}}</p>
+                        <a href="/user/{{post.author.id}}" class="card-content--author">
+                            <i class="fa fa-user"></i>{{post.author.name}}</p>
                     </div>
                 </a>
             </li>
         {% endfor %}
     </ul>
+    <div class="pages">
+        <ul class="pagination">
+            {% if page_current != 1 %}
+                <li>
+                    <a href="/1">
+                        <i class="fa fa-angle-double-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+            {% for i in 1..pages %}
+                {% if i == page_current %}
+                    <li class="current">
+                        <a href="/{{i}}">{{i}}</a>
+                    </li>
+                {% else %}
+                    <li class="">
+                        <a href="/{{i}}">{{i}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page_current < pages %}
+                <li>
+                    <a href="/{{pages}}">
+                        <i class="fa fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 {% endblock %}

@@ -4,6 +4,8 @@ use PicBundle\Entity\Tag;
 use PicBundle\Entity\PostTag;
 use PicBundle\Entity\Post;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 
 
 class PostRepository extends \Doctrine\ORM\EntityRepository{
@@ -116,6 +118,30 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     return $collection_post;
   }
 
+  public function accessToPost($post, $user){
+
+    $status = $post->getStatus();
+    if($user == null && $status != 'public') return false;
+    else if($status == "public" || $user->getRole() == "ROLE_ADMIN" || ($user != null && $status == "protected") || $post->getAuthor() == $user) return true;
+    else if($status == 'private') return false;
+    else if($status == 'followers'){ //Solo seguidores
+      $followers = $post->getAuthor()->getUserFollowers();
+      foreach ($followers as $follower) {
+        if($follower == $user) return true;
+      }
+      return false;
+    }
+  }
+
+  public function getPaginatedPost($pageSize=8, $currentPage=1){
+    $em = $this->getEntityManager();
+
+    $dql = "SELECT p FROM PicBundle\Entity\Post p ORDER BY p.id DESC";
+    $query = $em->createQuery($dql)->setFirstResult($pageSize*($currentPage-1))->setMaxResults($pageSize);
+    $paginator = new Paginator($query, $fetchJoinCollection = true);
+    return $paginator;
+
+  }
 
 /*
 
@@ -205,20 +231,6 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
       return $query;
   }
 
-  public function accessToPost($post, $user){
-
-    $status = $post->getStatus();
-    if($user == null && $status != 'public') return false;
-    else if($status == "public" || $user->getRole() == "ROLE_ADMIN" || ($user != null && $status == "protected") || $post->getAuthor() == $user) return true;
-    else if($status == 'private') return false;
-    else if($status == 'followers'){ //Solo seguidores
-      $followers = $post->getAuthor()->getUserFollowers();
-      foreach ($followers as $follower) {
-        if($follower == $user) return true;
-      }
-      return false;
-    }
-  }
 }
 
  ?>

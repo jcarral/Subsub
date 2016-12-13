@@ -15,7 +15,7 @@ const idHiddenInput = document.getElementById('hiddenId')
 const user = document.getElementById('hiddenUser')
 
 const tagList = document.getElementById('tagList')
-const removableTags = document.getElementsByClassName('tag-remove')
+let removableTags
 const stars = document.getElementsByClassName('rating-star')
 const radioStars = document.getElementsByClassName('radio-star')
 const commentTitle = document.getElementById('commentTitle')
@@ -25,6 +25,7 @@ const commentList = document.getElementById('commentList')
 const btnFollow = document.getElementById('btnFollow')
 const draggableFrame = document.getElementById('draggable')
 const editVisibility = document.getElementsByClassName('edit-visibility')
+const btnDelete = document.getElementById('deletePost')
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -61,9 +62,9 @@ const addTagToList = (tag, id) => {
     let li = document.createElement('li')
     li.classList = `tag`
     li.setAttribute('data-tag', id)
-    li.innerHTML = `${tag} <span class="tag-remove">&times;</span>`
+    li.innerHTML = `<a href="/post/list?tag=${tag}">${tag}</a> <span class="tag-remove">&times;</span>`
     tagList.appendChild(li)
-    li.addEventListener('click', removeTag)
+    removableTagsHandler()
 }
 
 const addTagHandler = (e) => {
@@ -179,6 +180,24 @@ const editPostVisibility = (e) => {
   ajax(config).then(data => console.log(data))
 }
 
+const deletePost = () => {
+  let result = window.confirm('¿Estás seguro de que quieres borrar el post?')
+  if(result){
+    ajax({url: `/post/${idHiddenInput.value}/delete`, method: 'POST'})
+      .then(data => {
+        data = JSON.parse(data)
+        if(data.message === 'OK#0') window.location('/')
+        else errorModal('No se ha podido borrar el post, es tu problema')
+      })
+  }
+}
+
+const removableTagsHandler = () => {
+  removableTags = document.getElementsByClassName('tag-remove')
+  for (let i = removableTags.length - 1; i >= 0; i--) {
+      removableTags[i].addEventListener('click', removeParent)
+  }
+}
 export const setDetail = () => {
     if(idHiddenInput === null) return false
 
@@ -186,9 +205,8 @@ export const setDetail = () => {
     if(commentSubmit !== null) commentSubmit.addEventListener('click', commentPost)
     if(btnFollow !== null) btnFollow.addEventListener('click', (e) => followUser(e, e.target, null))
     if(draggableFrame !== null) draggable(draggableFrame)
-    for (let i = removableTags.length - 1; i >= 0; i--) {
-        removableTags[i].addEventListener('click', removeParent)
-    }
+    if(btnDelete !== null) btnDelete.addEventListener('click', deletePost)
+
     for (let i = 0; i < radioStars.length; i++) {
         radioStars[i].addEventListener('click', ratePost)
     }
@@ -196,6 +214,6 @@ export const setDetail = () => {
     for (let i = 0; i < editVisibility.length; i++) {
       editVisibility[i].addEventListener('click', editPostVisibility)
     }
-
+    removableTagsHandler()
     ratingCount()
 }

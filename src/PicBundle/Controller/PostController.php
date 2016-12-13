@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use PicBundle\Entity\Post;
 use PicBundle\Entity\Follower;
 use PicBundle\Entity\User;
+use PicBundle\Entity\Fav;
 
 use PicBundle\Form\PostType;
 
@@ -21,15 +22,18 @@ class PostController extends Controller
         $this->session = new Session();
     }
 
-    public function listAction(Request $request)
+    public function listAction(Request $request, $page)
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('PicBundle:Post');
-        $post_list = $repo->findAll();
+        $page_size = 8;
+        $post_list = $repo->getPaginatedPost($page_size, $page);
 
         return $this->render('PicBundle:Post:list_items.html.twig',
         array(
           'posts' => $post_list,
+          'pages' => ceil(count($post_list)/$page_size),
+          'page_current' => $page
         )
       );
     }
@@ -118,6 +122,7 @@ class PostController extends Controller
       $user_repo = $em->getRepository('PicBundle:User');
 
         $post = $post_repo->findOneBy(array('id' => $postId));
+        if($post == null) return $this->redirect('/');
         $listTags = $post_repo->getAllPostTags($post);
         $comments = $post->getPostComments();
         $follower = $this->getUser();
@@ -186,12 +191,44 @@ class PostController extends Controller
         );
     }
 
+    public function favAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $post_repo = $em->getRepository('PicBundle:Post');
+        $fav_repo = $em->getRepository('PicBundle:Fav');
+
+        $post = $post_repo->find($id);
+        $user = $this->getUser();
+        if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0'));
+        else if($user == null) return new JsonResponse(array('message' => 'ERROR#1'));
+        $fav = $fav_repo->findOneBy(array('post' => $post, 'user' => $user));
+        if(count($fav) == 0 || $fav == null){
+          $fav = new Fav();
+          $fav->setUser($user);
+          $fav->setPost($post);
+          $em->persist($fav);
+          $em->flush();
+          return new JsonResponse(array('message' => 'OK#0'));
+        }else{
+          $em->remove($fav);
+          $em->flush();
+          return new JsonResponse(array('message' => 'OK#1'));
+        }
+    }
+
     private function validVisibility($val){
       return $val == 'protected' || $val == 'private' || $val == 'public' || $val = 'followers';
     }
 
     public function deleteAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
+        $post_repo = $em->getRepository('PicBundle:Post');
+        $post = $post_repo->find($id);
+        if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0'));
+        $em->remove($post);
+        $em->flush();
+        return new JsonResponse(array('message' => 'OK#0'));
         return $this->render('index.html.twig');
     }
 

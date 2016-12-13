@@ -12,7 +12,9 @@
                 </li>
               {% endfor %}
             </ul>
-            <a href="#" class="btn btn-show-all">Ver todos los posts de {{user.name}}</a>
+            {% if posts|length > 20 %}
+            <a href="/post/list?user={{post.author.id}}" class="btn btn-show-all">Ver todos los posts de {{user.name}}</a>
+            {% endif %}
             </div>
             {% else %}
               No hay post disponibles

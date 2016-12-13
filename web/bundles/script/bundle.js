@@ -17,7 +17,7 @@ var idHiddenInput = document.getElementById('hiddenId');
 var user = document.getElementById('hiddenUser');
 
 var tagList = document.getElementById('tagList');
-var removableTags = document.getElementsByClassName('tag-remove');
+var removableTags = void 0;
 var stars = document.getElementsByClassName('rating-star');
 var radioStars = document.getElementsByClassName('radio-star');
 var commentTitle = document.getElementById('commentTitle');
@@ -27,6 +27,7 @@ var commentList = document.getElementById('commentList');
 var btnFollow = document.getElementById('btnFollow');
 var draggableFrame = document.getElementById('draggable');
 var editVisibility = document.getElementsByClassName('edit-visibility');
+var btnDelete = document.getElementById('deletePost');
 
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
@@ -61,9 +62,9 @@ var addTagToList = function addTagToList(tag, id) {
     var li = document.createElement('li');
     li.classList = 'tag';
     li.setAttribute('data-tag', id);
-    li.innerHTML = tag + ' <span class="tag-remove">&times;</span>';
+    li.innerHTML = '<a href="/post/list?tag=' + tag + '">' + tag + '</a> <span class="tag-remove">&times;</span>';
     tagList.appendChild(li);
-    li.addEventListener('click', removeTag);
+    removableTagsHandler();
 };
 
 var addTagHandler = function addTagHandler(e) {
@@ -174,6 +175,22 @@ var editPostVisibility = function editPostVisibility(e) {
     });
 };
 
+var deletePost = function deletePost() {
+    var result = window.confirm('¿Estás seguro de que quieres borrar el post?');
+    if (result) {
+        (0, _utils.ajax)({ url: '/post/' + idHiddenInput.value + '/delete', method: 'POST' }).then(function (data) {
+            data = JSON.parse(data);
+            if (data.message === 'OK#0') window.location('/');else (0, _modals.errorModal)('No se ha podido borrar el post, es tu problema');
+        });
+    }
+};
+
+var removableTagsHandler = function removableTagsHandler() {
+    removableTags = document.getElementsByClassName('tag-remove');
+    for (var i = removableTags.length - 1; i >= 0; i--) {
+        removableTags[i].addEventListener('click', removeParent);
+    }
+};
 var setDetail = exports.setDetail = function setDetail() {
     if (idHiddenInput === null) return false;
 
@@ -183,21 +200,64 @@ var setDetail = exports.setDetail = function setDetail() {
         return (0, _utils.followUser)(e, e.target, null);
     });
     if (draggableFrame !== null) (0, _utils.draggable)(draggableFrame);
-    for (var i = removableTags.length - 1; i >= 0; i--) {
-        removableTags[i].addEventListener('click', removeParent);
-    }
-    for (var _i = 0; _i < radioStars.length; _i++) {
-        radioStars[_i].addEventListener('click', ratePost);
+    if (btnDelete !== null) btnDelete.addEventListener('click', deletePost);
+
+    for (var i = 0; i < radioStars.length; i++) {
+        radioStars[i].addEventListener('click', ratePost);
     }
 
-    for (var _i2 = 0; _i2 < editVisibility.length; _i2++) {
-        editVisibility[_i2].addEventListener('click', editPostVisibility);
+    for (var _i = 0; _i < editVisibility.length; _i++) {
+        editVisibility[_i].addEventListener('click', editPostVisibility);
     }
-
+    removableTagsHandler();
     ratingCount();
 };
 
-},{"./lib/modals.js":2,"./lib/utils.js":3,"./lib/validaciones.js":4}],2:[function(require,module,exports){
+},{"./lib/modals.js":3,"./lib/utils.js":4,"./lib/validaciones.js":5}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setIndexPage = undefined;
+
+var _modals = require('./lib/modals.js');
+
+var _utils = require('./lib/utils.js');
+
+var body = document.body;
+var html = document.documentElement;
+var container = document.getElementById('listContainer');
+var favBtns = document.getElementsByClassName('fav-btn');
+
+var setContainerHeight = function setContainerHeight() {
+  var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+  container.style.height = height - 100 + "px";
+};
+
+var favOrUnfav = function favOrUnfav(e) {
+  e.preventDefault();
+  var config = {
+    url: '/post/' + e.target.getAttribute('data-id') + '/fav',
+    method: 'POST'
+  };
+
+  (0, _utils.ajax)(config).then(function (data) {
+    data = JSON.parse(data);
+    if (data.message === 'OK#0') e.target.classList = 'fa fa-heart fav-btn'; //Fav añadido
+    else if (data.message === 'OK#1') e.target.classList = 'fa fa-heart-o fav-btn'; //Fav quitado
+      else (0, _modals.errorModal)(data.message + ': No se ha podido a\xF1adir/quitar el favorito.');
+  });
+};
+
+var setIndexPage = exports.setIndexPage = function setIndexPage() {
+  //if(container !== null) setContainerHeight()
+  for (var i = 0; i < favBtns.length; i++) {
+    favBtns[i].addEventListener('click', favOrUnfav);
+  }
+};
+
+},{"./lib/modals.js":3,"./lib/utils.js":4}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -248,7 +308,7 @@ var warningModal = exports.warningModal = function warningModal(message) {
     return createModal(message, 'warning');
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -331,7 +391,7 @@ var followUser = exports.followUser = function followUser(e, btn, callback) {
     });
 };
 
-},{"./modals.js":2}],4:[function(require,module,exports){
+},{"./modals.js":3}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -361,7 +421,7 @@ var validarComentario = exports.validarComentario = function validarComentario(t
   return validarTitulo(titulo) && validarTitulo(contenido);
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var _upload = require('./upload.js');
@@ -370,11 +430,14 @@ var _detail = require('./detail.js');
 
 var _profile = require('./profile.js');
 
+var _index = require('./index.js');
+
+(0, _index.setIndexPage)();
 (0, _detail.setDetail)();
 (0, _upload.setUpload)();
 (0, _profile.setProfile)();
 
-},{"./detail.js":1,"./profile.js":6,"./upload.js":7}],6:[function(require,module,exports){
+},{"./detail.js":1,"./index.js":2,"./profile.js":7,"./upload.js":8}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -511,7 +574,7 @@ var setProfile = exports.setProfile = function setProfile() {
     followBtnsHandler();
 };
 
-},{"./lib/modals.js":2,"./lib/utils.js":3}],7:[function(require,module,exports){
+},{"./lib/modals.js":3,"./lib/utils.js":4}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -674,4 +737,4 @@ var setUpload = exports.setUpload = function setUpload() {
     btnSubmit.addEventListener('click', submitHandler);
 };
 
-},{"./lib/modals.js":2,"./lib/utils.js":3,"./lib/validaciones.js":4}]},{},[5]);
+},{"./lib/modals.js":3,"./lib/utils.js":4,"./lib/validaciones.js":5}]},{},[6]);
