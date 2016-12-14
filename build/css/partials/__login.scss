@@ -1,0 +1,53 @@
+.login{
+  &-container{
+    margin: auto;
+    justify-content: center;
+    margin-top: 1em;
+    form{
+      margin-right: 2em;
+    }
+  }
+
+  &-title{
+    color: $blueLightColor;
+    margin-bottom: 1em;
+    text-align: center;
+    border-bottom: 1px solid $blueLightColor;
+    padding-bottom: 10px;
+  }
+
+  &-input{
+    width: 300px;
+    transition: all 0.3s ease-in;
+    padding: 10px;
+    font-size: 0.8em;
+    border: 1px solid #DBDBDB;
+    margin-bottom: 10px;
+    &:focus{
+      outline: none;
+      border: 1px solid lighten($blueLightColor, 10%);
+    }
+  }
+
+  &-submit{
+    width: 100%;
+    background-color: $blueLightColor;
+    border: 1px solid darken($blueLightColor, 5%);
+    color: #FAfAFA;
+    transition: all 0.2s ease-in;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 1em;
+    &:hover{
+      background-color: darken($blueLightColor, 7%);
+      border-color: darken($blueLightColor, 14%);
+      color: white;
+    }
+  }
+}
+
+.registro>form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

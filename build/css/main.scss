@@ -61,6 +61,16 @@ li{
 .hidden{
   display: none;
 }
+
+.error{
+  background-color: $logoutColor !important;
+  border-color: darken($logoutColor, 10%) !important;
+}
+
+.success{
+  background-color: $loginColor !important;
+  border-color: darken($loginColor, 10%) !important;
+}
 @import './partials/__header.scss';
 @import './partials/__menu.scss';
 @import './partials/__footer.scss';
@@ -70,3 +80,4 @@ li{
 @import './partials/__modals.scss';
 @import './partials/__details.scss';
 @import './partials/__profile.scss';
+@import './partials/__login.scss';

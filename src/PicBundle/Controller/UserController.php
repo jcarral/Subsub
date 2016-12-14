@@ -55,20 +55,24 @@ class UserController extends Controller
                     $em = $this->getDoctrine()->getEntityManager();
                     $em->persist($user);
                     $flush = $em->flush();
-                    $ok = $this->sendMail($user->getName(), $user->getMail());
+                    $this->sendMail($user->getName(), $user->getMail());
                     if ($flush == null) {
-                        $status = 'El usuario se ha creado correctamente'.$ok;
+                        $status = 'El usuario se ha creado correctamente, revisa tu bandeja de entrada';
+                          $this->session->getFlashBag()->add('status-success', $status);
                     } else {
                         $status = 'No te has registrado correctamente';
+                          $this->session->getFlashBag()->add('status-error', $status);
                     }
                 } else {
-                    $status = 'El usuario ya existe!!!';
+                    $status = 'El usuario ya existe, prueba con otro correo';
+                    $this->session->getFlashBag()->add('status-error', $status);
                 }
             } else {
                 $status = 'No te has registrado correctamente';
+                $this->session->getFlashBag()->add('status-error', $status);
             }
 
-            $this->session->getFlashBag()->add('status', $status);
+
         }
 
         return $this->render('PicBundle:User:login.html.twig', array(

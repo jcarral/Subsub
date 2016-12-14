@@ -32,7 +32,13 @@
               <aside class="header-alert">
                 <h4>Por favor, activa tu cuenta, mira en la bandeja de entrada. </h4>
               </aside>
-{% endif %}
+            {% endif %}
+            {% for message in app.session.flashbag.get("status-success") %}
+                <div class="header-alert success">{{message}}</div>
+            {% endfor %}
+            {% for message in app.session.flashbag.get("status-error") %}
+                <div class="header-alert error">{{message}}</div>
+            {% endfor %}
             {% block content %}
                 SubSub
             {% endblock %}

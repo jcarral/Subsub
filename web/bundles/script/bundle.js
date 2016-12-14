@@ -421,6 +421,9 @@ var favOrUnfav = exports.favOrUnfav = function favOrUnfav(e, postId) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var MAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var PASS_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
 var validarTitulo = function validarTitulo(titulo) {
   return titulo !== null && titulo.value.trim().length >= 3;
 };
@@ -435,6 +438,11 @@ var validarCanvas = function validarCanvas(canvas) {
   return canvas.toDataURL("image/png") !== null;
 };
 
+var validarRegex = function validarRegex(regex, mail) {
+  console.log(regex.test(mail));
+  return regex.test(mail);
+};
+
 var validarFormPost = exports.validarFormPost = function validarFormPost(titulo, img, status) {
   return validarStatus(status) && validarImg(img) && validarTitulo(titulo);
 };
@@ -444,8 +452,52 @@ var validarFormAjax = exports.validarFormAjax = function validarFormAjax(titulo,
 var validarComentario = exports.validarComentario = function validarComentario(titulo, contenido) {
   return validarTitulo(titulo) && validarTitulo(contenido);
 };
+var validarUsuario = exports.validarUsuario = function validarUsuario(nombre, correo, password) {
+  return validarTitulo(nombre) && validarRegex(MAIL_REGEX, correo) && validarRegex(PASS_REGEX, password);
+};
 
 },{}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setLogin = undefined;
+
+var _validaciones = require('./lib/validaciones.js');
+
+var _modals = require('./lib/modals.js');
+
+var firstPass = document.getElementById('user_pass');
+var repeatPass = document.getElementById('repeatPass');
+var submitUser = document.getElementById('user_Confirmar');
+var formUser = document.querySelector('.registro>form');
+var nameUser = document.getElementById('user_name');
+var mailUser = document.getElementById('user_mail');
+
+var equalsPass = function equalsPass(e) {
+  if (firstPass.value !== repeatPass.value) {
+    repeatPass.style = 'border:1px solid red';
+    return false;
+  } else {
+    repeatPass.style = 'border:1px solid #DBDBDB';
+    return true;
+  }
+};
+
+var submitNewUser = function submitNewUser(e) {
+  if (!(0, _validaciones.validarUsuario)(nameUser, mailUser.value, firstPass.value) || !equalsPass()) {
+    e.preventDefault();
+    (0, _modals.errorModal)('Los campos del registro no son validos');
+  }
+};
+
+var setLogin = exports.setLogin = function setLogin() {
+  if (repeatPass !== null) repeatPass.addEventListener('keyup', equalsPass);
+  if (formUser !== null) formUser.addEventListener('submit', submitNewUser);
+};
+
+},{"./lib/modals.js":3,"./lib/validaciones.js":5}],7:[function(require,module,exports){
 'use strict';
 
 var _upload = require('./upload.js');
@@ -456,12 +508,15 @@ var _profile = require('./profile.js');
 
 var _index = require('./index.js');
 
+var _login = require('./login.js');
+
 (0, _index.setIndexPage)();
 (0, _detail.setDetail)();
 (0, _upload.setUpload)();
 (0, _profile.setProfile)();
+(0, _login.setLogin)();
 
-},{"./detail.js":1,"./index.js":2,"./profile.js":7,"./upload.js":8}],7:[function(require,module,exports){
+},{"./detail.js":1,"./index.js":2,"./login.js":6,"./profile.js":8,"./upload.js":9}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -598,7 +653,7 @@ var setProfile = exports.setProfile = function setProfile() {
     followBtnsHandler();
 };
 
-},{"./lib/modals.js":3,"./lib/utils.js":4}],8:[function(require,module,exports){
+},{"./lib/modals.js":3,"./lib/utils.js":4}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -761,4 +816,4 @@ var setUpload = exports.setUpload = function setUpload() {
     btnSubmit.addEventListener('click', submitHandler);
 };
 
-},{"./lib/modals.js":3,"./lib/utils.js":4,"./lib/validaciones.js":5}]},{},[6]);
+},{"./lib/modals.js":3,"./lib/utils.js":4,"./lib/validaciones.js":5}]},{},[7]);
