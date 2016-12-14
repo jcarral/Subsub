@@ -1,6 +1,7 @@
 <div class="header-botones">
-    <div class="btn btn-search">
-        <i class="fa fa-search"></i>
+    <div class="btn btn-search search-row">
+        <input type="text" name="" value="" class="input-search" placeholder="Buscar..." id="inputSearch">
+        <i class="fa fa-search" id="btnSearch"></i>
     </div>
     {% if app.user == null %}
         <a href="{{path('login')}}" class="btn btn-login">

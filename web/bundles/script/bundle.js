@@ -229,6 +229,8 @@ var body = document.body;
 var html = document.documentElement;
 var container = document.getElementById('listContainer');
 var favBtns = document.getElementsByClassName('fav-btn');
+var btnSearch = document.getElementById('btnSearch');
+var inputSearch = document.getElementById('inputSearch');
 
 var setContainerHeight = function setContainerHeight() {
   var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
@@ -250,11 +252,26 @@ var favOrUnfav = function favOrUnfav(e) {
   });
 };
 
+var toggleSearch = function toggleSearch(e) {
+  var inputField = e.target.parentElement.children[0];
+  inputField.classList = inputField.classList.contains('expand') ? 'input-search' : 'input-search expand';
+};
+
+var searchHandler = function searchHandler(e) {
+  if (e.keyCode === 13) {
+    var content = e.target.value;
+    if (content.trim().length < 3) return (0, _modals.errorModal)('Las búsquedas deben tener al menos 3 carácteres');
+    window.location = '/post/list?q=' + content;
+  }
+};
+
 var setIndexPage = exports.setIndexPage = function setIndexPage() {
   //if(container !== null) setContainerHeight()
   for (var i = 0; i < favBtns.length; i++) {
     favBtns[i].addEventListener('click', favOrUnfav);
   }
+  if (btnSearch !== null) btnSearch.addEventListener('click', toggleSearch);
+  if (inputSearch !== null) inputSearch.addEventListener('keypress', searchHandler);
 };
 
 },{"./lib/modals.js":3,"./lib/utils.js":4}],3:[function(require,module,exports){

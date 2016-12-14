@@ -84,9 +84,10 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     $post_repo = $em->getRepository('PicBundle:Post');
 
     $author = (is_numeric($author))?$user_repo->findOneBy(array('id'=>$author)):$user_repo->findOneBy(array('name' => $author));
-    if(count($author) == 0 || $author->getStatus() == 'private') return array();
+    if(count($author) == 0 || ($author->getStatus() == 'private' && $user != $author && $user->getRole() != 'ROLE_ADMIN')) return array();
     $query = $this->getAuthorPostsQuery($author, $user, $em);
-    return  $query->getResult();
+    $res = $query->getResult();
+    return  $res;
   }
 
   public function findPostsByTag($tag, $user){
@@ -115,8 +116,10 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     $collection_post = new ArrayCollection(
     array_merge($list_posts_user, $list_posts_tag, $list_posts_title)
     );
-    return $collection_post;
+    return $this->uniqueCollection($collection_post);
   }
+
+
 
   public function accessToPost($post, $user){
 
@@ -153,7 +156,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
    $posts = $post_repo->findBy(array('title'=>$q));
    $list_posts = array();
    foreach ($posts as $post) {
-     $post = $post->getPost();
+     //$post = $post->getPost();
      echo $post->getId() . "OK </br>";
      if($this->shouldIAddPost($user, $post)) array_push($list_posts, $post);
    }
@@ -165,9 +168,8 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
    $status = $post->getStatus();
    $author = $post->getAuthor();
    $follower_repo = $em->getRepository('PicBundle:Follower');
-
    if($status == 'public') return true;
-   else if($user == null || $author->getStatus() == 'private') return false;
+   else if($user == null) return false; //Protected, Followers y privados no se muestran
    else if($status == 'follower' && count($follower_repo->findOneBy(array('user'=>$author, 'follower'=>$user)))==0) return false;
    else if($status == 'private' && ($author != $user && $user->getRole() != 'ROLE_ADMIN')) return false;
    else return true;
@@ -180,13 +182,11 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     }else if($user->getRole() == 'ROLE_ADMIN' || $user == $author)  $query = $this->getAllPostsQuery($author, $em);
     else{
         $follower_repo = $em->getRepository('PicBundle:Follower');
-
         if(count($follower_repo->findOneBy(array('user'=>$author, 'follower'=>$user)))==0) $query = $this->getProtectedPostsQuery($author, $em);
         else $query = $this->getFollowersPostsQuery($author, $em);
-
     }
-    return $query;
 
+    return $query;
   }
 
   private function getAllPostsQuery($author, $em){
@@ -231,6 +231,13 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
       return $query;
   }
 
+  private function uniqueCollection($inputCollection){
+    $outputCollection = new ArrayCollection();
+    foreach ($inputCollection as $post) {
+      if(!$outputCollection->contains($post)) $outputCollection->add($post);
+    }
+    return $outputCollection;
+  }
 }
 
  ?>
