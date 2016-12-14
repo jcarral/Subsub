@@ -2,7 +2,8 @@ import {
     ajax,
     follow,
     followUser,
-    draggable
+    draggable,
+    favOrUnfav
 } from './lib/utils.js'
 import {
     warningModal,
@@ -26,6 +27,7 @@ const btnFollow = document.getElementById('btnFollow')
 const draggableFrame = document.getElementById('draggable')
 const editVisibility = document.getElementsByClassName('edit-visibility')
 const btnDelete = document.getElementById('deletePost')
+const favBtn = document.getElementById('favBtnDetail')
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -206,7 +208,7 @@ export const setDetail = () => {
     if(btnFollow !== null) btnFollow.addEventListener('click', (e) => followUser(e, e.target, null))
     if(draggableFrame !== null) draggable(draggableFrame)
     if(btnDelete !== null) btnDelete.addEventListener('click', deletePost)
-
+    if(favBtn !== null ) favBtn.addEventListener('click', (e) => favOrUnfav(e, idHiddenInput.value, false))
     for (let i = 0; i < radioStars.length; i++) {
         radioStars[i].addEventListener('click', ratePost)
     }

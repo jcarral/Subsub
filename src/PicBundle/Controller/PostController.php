@@ -120,6 +120,8 @@ class PostController extends Controller
       $post_repo = $em->getRepository('PicBundle:Post');
       $follower_repo = $em->getRepository('PicBundle:Follower');
       $user_repo = $em->getRepository('PicBundle:User');
+      $fav_repo = $em->getRepository('PicBundle:Fav');
+
 
         $post = $post_repo->findOneBy(array('id' => $postId));
         if($post == null) return $this->redirect('/');
@@ -128,18 +130,25 @@ class PostController extends Controller
         $follower = $this->getUser();
         if(!$post_repo->accessToPost($post, $follower)) return $this->redirect('/');
         $following = false;
+        $isFav = false;
         if($follower != null){
           $user = $user_repo->findOneBy(array('id'=>$post->getAuthor()->getId()));
           $follow_search = $follower_repo->findOneBy(array('follower'=>$follower, 'user'=>$user));
           if(count($follow_search) == 0) $following = false;
           else $following = true;
+
+          $favs = $fav_repo->findOneBy(array('user'=> $follower, 'post' => $post));
+          if(count($favs) > 0) $isFav = true;
         }
+
+
         return $this->render('PicBundle:Post:detail.html.twig',
           array(
             'post' => $post,
             'tags' => $listTags,
             'comments' => $comments,
-            'following' => $following
+            'following' => $following,
+            'isFav' => $isFav
           )
         );
     }

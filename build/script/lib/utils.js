@@ -77,3 +77,19 @@ export const followUser = (e, btn, callback) => {
     callback()
   })
 }
+
+export const favOrUnfav = (e, postId, defaultBtn = true) => {
+  e.preventDefault()
+  let config = {
+    url : `/post/${postId}/fav`,
+    method : 'POST'
+  }
+
+  auxAjax(config)
+    .then(data => {
+      data = JSON.parse(data)
+      if(data.message === 'OK#0') e.target.classList = `fa fa-heart ${defaultBtn?'fav-btn':'fav-detail'}` //Fav añadido
+      else if(data.message === 'OK#1') e.target.classList = `fa fa-heart-o ${defaultBtn?'fav-btn':'fav-detail'}` //Fav quitado
+      else errorModal(`${data.message}: No se ha podido añadir/quitar el favorito.`)
+    })
+}

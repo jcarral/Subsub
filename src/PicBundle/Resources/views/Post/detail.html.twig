@@ -2,7 +2,7 @@
 {% block content %}
     <div class="upload-title">
         <h2>{{post.title}}</h2>
-        {% if post.description is defined %}
+        {% if post.description|length > 0 %}
             <p>{{post.description}}</p>
         {% else %}
             <p>Soy un soso y no pongo descripción a mis fotos</p>
@@ -10,6 +10,9 @@
     </div>
     <section class="detail-main">
         <img src="{{asset('uploads/'~post.image)}}" alt="" class="detail-photo">
+        {% if app.user != null %}
+            <i class="fa {{(isFav)?'fa-heart':'fa-heart-o'}} fav-detail" id="favBtnDetail"></i>
+        {% endif %}
         <aside class="detail-info">
             <header class="detail-info--header">
                 <i class="fa fa-info"></i>

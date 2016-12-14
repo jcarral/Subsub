@@ -13,7 +13,8 @@ $commentFormColor: $greenMaterialColor;
     display: flex;
     flex-wrap: wrap;
     min-height: 400px;
-    overflow: hidden;
+    //overflow: hidden;
+    position: relative;
 
     h5{
       font-size: 1em;
@@ -259,5 +260,23 @@ $commentFormColor: $greenMaterialColor;
     i{
       margin-right: 10px;
     }
+  }
+}
+
+.fav-detail{
+  position: absolute;
+  background-color: #EC407A;
+  padding: 20px;
+  top: 10px;
+  left: 10px;
+  border-radius: 100%;
+  font-size: 1.2em !important;
+  font-weight: bold;
+  box-shadow: $shadow1;
+  transition: all 0.25s ease;
+  color: white;
+  cursor: pointer;
+  &:hover{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
   }
 }
