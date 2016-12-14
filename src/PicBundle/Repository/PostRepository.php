@@ -84,7 +84,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
     $post_repo = $em->getRepository('PicBundle:Post');
 
     $author = (is_numeric($author))?$user_repo->findOneBy(array('id'=>$author)):$user_repo->findOneBy(array('name' => $author));
-    if(count($author) == 0 || ($author->getStatus() == 'private' && $user != $author && $user->getRole() != 'ROLE_ADMIN')) return array();
+    if(count($author) == 0 || ($author->getStatus() == 'private' && $user != $author && $user != null && $user->getRole() != 'ROLE_ADMIN')) return array();
     $query = $this->getAuthorPostsQuery($author, $user, $em);
     $res = $query->getResult();
     return  $res;

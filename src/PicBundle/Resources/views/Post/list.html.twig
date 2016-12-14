@@ -1,4 +1,22 @@
-{% for post in posts %}
+{% extends 'PicBundle::layout.html.twig' %}
 
-{{post.title}}</br>
-{% endfor %}
+{% block content %}
+
+{% if posts|length > 0 %}
+<ul class="profile-posts">
+  {% for post in posts %}
+    <li class="profile-posts--item">
+      <img src="{{ asset('uploads/'~post.image)}}" alt="" height="150px" width="150px">
+      <a href="{{ path('post_detail', {'postId': post.id})}}">{{post.title|length > 9 ? post.title|slice(0, 10) ~ '...' : post.title}}</a>
+
+    </li>
+  {% endfor %}
+</ul>
+{% if posts|length > 20 %}
+<a href="/post/list?user={{post.author.id}}" class="btn btn-show-all">Ver todos los posts de {{user.name}}</a>
+{% endif %}
+</div>
+{% else %}
+  No hay post disponibles
+{% endif %}
+{% endblock %}
