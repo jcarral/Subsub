@@ -1,6 +1,7 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    access_denied_url: /
     encoders:
         PicBundle\Entity\User:
             algorithm: bcrypt
@@ -30,9 +31,26 @@ security:
                 target: /login
 
     access_control:
-#        - { path: ^/, roles: ROLE_USER}
-        - { path: ^/tags, roles: [ROLE_ADMIN, ROLE_USER]}
-        - { path: ^/categories, roles: ROLE_ADMIN}
+        - { path: ^/login, allow_if: "not has_role('ROLE_USER')" }
+        - { path: ^/tag/add, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/tag/delete/\d+, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/add, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/add/ajax, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/tag/tag, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/tag/comment, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/post/\d+/visibility, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/post/\d+/delete, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/post/\d+/fav, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/add/rating, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/comment/count/\d+, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/me, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/user/\d+, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/user/name, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/user/visibility, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/follow/\d+, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/follow/list/\d+, roles: [ROLE_ADMIN, ROLE_USER]}
+        - { path: ^/admin, roles: ROLE_ADMIN}
+
 
             # activate different ways to authenticate
 
