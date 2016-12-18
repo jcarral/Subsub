@@ -163,7 +163,7 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
    return $list_posts;
  }
 
- private function shouldIAddPost($user, $post){
+ public function shouldIAddPost($user, $post){
    $em = $this->getEntityManager();
    $status = $post->getStatus();
    $author = $post->getAuthor();
@@ -175,6 +175,34 @@ class PostRepository extends \Doctrine\ORM\EntityRepository{
    else return true;
  }
 
+ public function filterPost($post){
+
+   $title = $post->getTitle();
+   $description = $post->getDescription();
+   $image = $post->getImage();
+   $author = array(
+     'name' => $post->getAuthor()->getName(),
+     'id' => $post->getAuthor()->getId()
+   );
+   $rating = $this->getPostRatingMedia($post);
+   return array(
+     'id' => $post->getid(),
+     'title' => $title,
+     'description' => $description,
+     'image' => $image,
+     'author' => $author,
+     'rating' => $rating
+   );
+ }
+
+ public function filterPostList($list){
+   $post_list = array();
+   foreach ($list as $post) {
+     $post_obj = $this->filterPost($post);
+     array_push($post_list, $post_obj);
+   }
+   return $post_list;
+ }
 
   private function getAuthorPostsQuery($author, $user, $em){
     if($user == null){

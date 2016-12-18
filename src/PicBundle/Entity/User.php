@@ -160,7 +160,8 @@ class User implements UserInterface, JsonSerializable
     }
 
     public function getSalt(){
-      return null;
+      //Mala practica, es para la demo
+      return 'bTtYO2xl9jHkW4sWTezUN4';
     }
 
     public function getRoles() {
