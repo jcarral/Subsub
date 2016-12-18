@@ -6,6 +6,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use PicBundle\Entity\User;
 
 
@@ -77,6 +79,27 @@ class UserController extends FOSRestController
 
       $view = $this->view($data, Response::HTTP_OK);
       return $view;
+  }
+
+  /**
+   * @Rest\Put("/user)
+   */
+  public function editAction(Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $user_repo = $em->getRepository('PicBundle:User');
+
+    $token = $request->request->get('token');
+    $status = $request->request->get('status');
+
+    $current_user = $user_repo->findOneBy(array("avatar" => $token));
+    if($token == null || count($current_user) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'No tienes permisos'));
+    else if($status == null || ($status != 'private' && $status != 'public'))return new JsonResponse(array('message' => 'ERROR#1', 'type' => ' Parametros incorrectos'));
+
+    $current_user->setStatus($status);
+    $em->persist($current_user);
+    $em->flush();
+    return new JsonResponse(array('message' => 'OK'));
   }
 
 }

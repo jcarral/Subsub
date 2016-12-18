@@ -29,7 +29,7 @@ class PostController extends FOSRestController
       $token = $request->query->get('token');
       $post = $post_repo->find($id);
 
-      if(count($post) == 0) return new JsonResponse(array('message' => 'Error, no se encontró el post'));
+      if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'No se encontró el post'));
       $current_user = ($token != null)?$user_repo->findOneBy(array('avatar' => $token)):null;
       if($post_repo->shouldIAddPost($current_user, $post)) {
         $data = array(
@@ -39,7 +39,7 @@ class PostController extends FOSRestController
 
         $view = $this->view($data, Response::HTTP_OK);
         return $view;
-      }else return new JsonResponse(array('message' => 'Error, no tienes acceso al post'));
+      }else return new JsonResponse(array('message' => 'ERROR#1', 'type' => 'No tienes acceso al post'));
   }
 
   /**
@@ -77,13 +77,55 @@ class PostController extends FOSRestController
       $token = $request->request->get('token');
       $post = $post_repo->find($id);
 
-      if(count($post) == 0) return new JsonResponse(array('message' => 'Error, no se encontró el post'));
+      if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'No se encontró el post'));
       $current_user = ($token != null)?$user_repo->findOneBy(array('avatar' => $token)):null;
-      if($current_user == null) return new JsonResponse(array('message' => 'Error, no tienes permisos para borrar el post'));
+      if($current_user == null) return new JsonResponse(array('message' => 'ERROR#1', 'type' => 'No tienes permisos para borrar el post'));
       $em->remove($post);
       $em->flush();
-      return new JsonResponse(array('message' => 'OK#0, Se ha borrado el post correctamente'));
+      return new JsonResponse(array('message' => 'OK'));
+    }
+
+    /**
+    * @Rest\Delete("/fav/{id}")
+    */
+    public function favRemoveAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+      $user_repo = $em->getRepository('PicBundle:User');
+      $fav_repo = $em->getRepository('PicBundle:Fav');
+
+      $token = $request->request->get('token');
+      if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'Post no encontrado'));
+      $current_user = ($token != null)?$user_repo->findOneBy(array('avatar' => $token)):null;
+      if($current_user == null || ($current_user != $post->getAuthor() && $current_user->getRole() != 'ROLE_ADMIN')) return new JsonResponse(array('message' => 'ERROR#1', 'type' => 'No tienes permisos para editar el post'));
+      $fav = $fav_repo->findOneBy(array('user' => $current_user));
+      if(count($fav) == 0) return new JsonResponse(array('message' => 'ERROR#2', 'type' => 'Este post no está marcado como favorito'));
+      $em->remove($fav);
+      $em->flush();
+      return new JsonResponse(array('message' => 'OK'));
     }
 
 
+    /**
+    * @Rest\Put("/post/{id}")
+    */
+    public function editAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager();
+      $post_repo = $em->getRepository('PicBundle:Post');
+      $user_repo = $em->getRepository('PicBundle:User');
+
+      $token = $request->request->get('token');
+      $status = $request->request->get('status');
+      $post = $post_repo->find($id);
+      if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'Post no encontrado'));
+      $current_user = ($token != null)?$user_repo->findOneBy(array('avatar' => $token)):null;
+      if($current_user == null || ($current_user != $post->getAuthor() && $current_user->getRole() != 'ROLE_ADMIN')) return new JsonResponse(array('message' => 'ERROR#1', 'type' => 'No tienes permisos para editar el post'));
+      else if($status == null || ($status != 'public' && $status != 'protected' && $status != 'follower' && $status != 'private')) return new JsonResponse(array('message' => 'ERROR#2', 'type' => 'Los parámetros no son correctos'));
+      $post->setStatus($status);
+      $em->persist($post);
+      $em->flush();
+      return new JsonResponse(array('message' => 'OK'));
+    }
 }
