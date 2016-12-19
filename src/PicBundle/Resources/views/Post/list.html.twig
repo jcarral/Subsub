@@ -19,4 +19,17 @@
 {% else %}
   No hay post disponibles
 {% endif %}
+
+{% if posts|length > 0 %}
+<h4 class="flickr-title"><i class="fa fa-flickr"></i> Imágenes relacionadas en FLICKR</h4>
+<ul class="profile-posts">
+  {% for pic in flickr %}
+  <li class="profile-posts--item">
+    <img src="{{pic}}" alt="" height="150px" width="150px">
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+No hay fotos disponibles en flickr
+{% endif %}
 {% endblock %}
