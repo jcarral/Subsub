@@ -74,9 +74,8 @@ class PostController extends FOSRestController
       $post_repo = $em->getRepository('PicBundle:Post');
       $user_repo = $em->getRepository('PicBundle:User');
 
-      $token = $request->request->get('token');
+      $token = $request->query->get('token');
       $post = $post_repo->find($id);
-
       if(count($post) == 0) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'No se encontró el post'));
       $current_user = ($token != null)?$user_repo->findOneBy(array('avatar' => $token)):null;
       if($current_user == null) return new JsonResponse(array('message' => 'ERROR#1', 'type' => 'No tienes permisos para borrar el post'));

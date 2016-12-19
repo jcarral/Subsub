@@ -20,7 +20,12 @@ class UserController extends FOSRestController
  {
      $em = $this->getDoctrine()->getManager();
      $user_repo = $em->getRepository('PicBundle:User');
-     $data = $user_repo->findAll();
+     $post_repo = $em->getRepository('PicBundle:Post');
+     $token = $request->query->get('token');
+     $current_user = $user_repo->findOneBy(array('avatar' => $token));
+     if($token == null || $current_user == null) return new JsonResponse(array('message' => 'ERROR#0', 'type' => 'No tienes permisos'));
+     $post_list = $post_repo->findAll(array('author' => $current_user));
+     $data = $post_repo->filterPostList($post_list);
      $view = $this->view($data, Response::HTTP_OK);
      return $view;
  }
@@ -82,7 +87,7 @@ class UserController extends FOSRestController
   }
 
   /**
-   * @Rest\Put("/user)
+   * @Rest\Put("/user")
    */
   public function editAction(Request $request)
   {
